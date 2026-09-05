@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eGym → Garmin</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0c0d">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  /* Donker, strak thema — geïnspireerd op de huisstijl van Healthclub Heijenoord
+     (zwart/antraciet, hoog contrast, hoofdletter-koppen, ingetogen groene accent). */
+  :root { color-scheme: dark;
+    --bg:#0b0c0d; --card:#151718; --card2:#1c1f21; --ink:#f2f3f2; --muted:#9aa0a3; --line:#2a2d2f;
+    --accent:#1f8f6f; --accent2:#2bb388; --accent-ink:#08120e; --warn:#e2a13a; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; padding:16px; }
+  .topbar { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:4px; }
+  h1 { font-size:1.15rem; margin:0 0 2px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
+  .verTag { flex:none; font-size:.66rem; color:var(--muted); border:1px solid var(--line); border-radius:999px;
+    padding:3px 9px; letter-spacing:.03em; white-space:nowrap; margin-top:2px; }
+  .sub { color:var(--muted); font-size:.85rem; margin-bottom:18px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:14px; }
+  .step { display:flex; align-items:center; gap:9px; font-weight:700; margin-bottom:12px;
+    text-transform:uppercase; font-size:.8rem; letter-spacing:.06em; color:var(--muted); }
+  .step .n { background:var(--accent); color:var(--accent-ink); width:22px; height:22px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:800; flex:none; }
+  button, .btn { appearance:none; border:0; border-radius:8px; padding:14px 18px; font-size:.92rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:.03em; background:var(--accent); color:var(--accent-ink);
+    width:100%; cursor:pointer; display:block; text-align:center; text-decoration:none; transition:background .15s; }
+  button:hover, .btn:hover { background:var(--accent2); }
+  button.secondary { background:transparent; color:var(--accent2); border:1.5px solid var(--accent); }
+  button.secondary:hover { background:var(--card2); }
+  button:disabled { opacity:.4; }
+  #status { font-size:.9rem; color:var(--muted); margin-top:10px; min-height:1.2em; }
+  table { width:100%; border-collapse:collapse; font-size:.92rem; }
+  th { text-align:left; color:var(--muted); font-weight:700; font-size:.72rem; padding:4px 4px;
+    text-transform:uppercase; letter-spacing:.03em; }
+  td { padding:3px 2px; border-top:1px solid var(--line); }
+  td input { width:100%; border:0; background:transparent; color:var(--ink); font:inherit; padding:6px 4px; }
+  td.num input { width:3.2em; text-align:right; }
+  td.del { width:28px; text-align:center; color:var(--muted); cursor:pointer; }
+  .rowline { display:flex; gap:10px; margin:10px 0; }
+  .rowline label { flex:1; font-size:.78rem; color:var(--muted); }
+  .rowline input { width:100%; border:1px solid var(--line); border-radius:8px; padding:10px;
+    background:var(--card2); color:var(--ink); font:inherit; }
+  .warn { color:var(--warn); font-size:.88rem; margin-top:8px; }
+  details { margin-top:10px; font-size:.85rem; color:var(--muted); }
+  summary { cursor:pointer; }
+  .ok { color:var(--accent2); font-weight:600; }
+  #summary { font-size:.95rem; margin-top:8px; }
+  .hidden { display:none !important; }
+  tbody.exrow { border-top:1px solid var(--line); }
+  tbody.exrow .r1 td { border-top:0; }
+  tr.r2 td { border-top:0; padding:0 2px 8px; }
+  .garmlabel { font-size:.72rem; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.04em; margin-right:6px; }
+  select.gsel { font:inherit; font-size:.88rem; color:var(--ink); background:var(--card2);
+    border:1px solid var(--line); border-radius:8px; padding:5px 6px; max-width:65%; }
+  select.gsel.unset { border-color:var(--warn); color:var(--warn); }
+  .warnline { color:var(--warn); }
+  .cardioDevice { border-top:1px solid var(--line); padding-top:12px; margin-top:12px; }
+  .cardioDevice:first-child { border-top:0; margin-top:0; padding-top:0; }
+  .cardioDevice h3 { margin:0 0 8px; font-size:.85rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink); }
+  table.cardioTbl { width:100%; border-collapse:collapse; font-size:.9rem; }
+  table.cardioTbl th { text-align:left; color:var(--muted); font-weight:700; font-size:.7rem; padding:4px 2px;
+    text-transform:uppercase; letter-spacing:.03em; }
+  table.cardioTbl td { padding:3px 2px; border-top:1px solid var(--line); }
+  table.cardioTbl td.num input { width:100%; border:0; background:transparent; color:var(--ink); font:inherit; padding:6px 2px; text-align:right; }
+  table.cardioTbl td.idx { color:var(--muted); }
+  table.cardioTbl td.del { width:24px; text-align:center; color:var(--muted); cursor:pointer; }
+  .cardioDevice .btnrow { display:flex; gap:8px; margin-top:8px; }
+  .cardioDevice .btnrow button { padding:8px; }
+  .cardioSummary { font-size:.9rem; margin-top:6px; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <h1>eGym → Garmin</h1>
+    <div class="sub">Screenshots van "Details van de training" → FIT-bestand → Garmin Connect (Strava volgt automatisch)</div>
+  </div>
+  <span class="verTag" id="verTag"></span>
+</div>
+
+<div class="card">
+  <div class="step"><span class="n">1</span> Kies je eGym-screenshots</div>
+  <input type="file" id="files" accept="image/*" multiple class="hidden">
+  <button id="pick">Screenshots kiezen</button>
+  <div id="status"></div>
+</div>
+
+<div class="card hidden" id="resultCard">
+  <div class="step"><span class="n">2</span> Controleer de gegevens</div>
+  <div class="rowline">
+    <label>Datum<br><input type="date" id="dat"></label>
+    <label>Aanvangstijd<br><input type="time" id="tijd"></label>
+  </div>
+  <table id="tbl">
+    <thead><tr><th>Oefening</th><th>Sets</th><th>Herh.</th><th>kg</th><th>kcal</th><th></th></tr></thead>
+  </table>
+  <div style="margin-top:8px"><button class="secondary" id="addRow" style="padding:8px">+ regel toevoegen</button></div>
+  <div id="countWarn" class="warn hidden"></div>
+  <div style="font-size:.8rem;color:var(--muted);margin-top:8px">
+    Onder elke oefening staat de Garmin-oefening die wordt gebruikt. Klopt hij niet? Kies zelf een andere.
+  </div>
+  <details><summary>Instellingen</summary>
+    <div class="rowline">
+      <label>Seconden per set<br><input type="number" id="activeS" value="60"></label>
+      <label>Rust tussen sets (s)<br><input type="number" id="restS" value="50"></label>
+    </div>
+  </details>
+</div>
+
+<div class="card hidden" id="fitCard">
+  <div class="step"><span class="n">3</span> FIT-bestand (krachttraining)</div>
+  <button id="makeFit">Maak &amp; download FIT-bestand</button>
+  <div id="summary"></div>
+</div>
+
+<div class="card hidden" id="cardioCard">
+  <div class="step"><span class="n">3</span> Cardio-apparaten</div>
+  <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px">
+    Gebruikt dezelfde datum/aanvangstijd hierboven. Elk apparaat wordt een eigen FIT-bestand.
+  </div>
+  <div id="cardioDevices"></div>
+</div>
+
+<div class="card hidden" id="garminCard">
+  <div class="step"><span class="n">4</span> Importeren</div>
+  <a class="btn" href="https://connect.garmin.com/modern/import-data" target="_blank" rel="noopener">Open Garmin Connect Import</a>
+  <details><summary>Hoe verder?</summary>
+    Kies op de Garmin-pagina "Gegevens importeren", selecteer het zojuist gedownloade
+    .fit-bestand (staat in je Downloads-map) en bevestig. Als je Garmin-Strava-koppeling
+    aanstaat, verschijnt de training daarna automatisch in Strava.
+  </details>
+</div>
+
+<details style="margin-top:4px"><summary>Werkt de tekstherkenning niet?</summary>
+  Tekstherkenning heeft (de eerste keer) internet nodig. Lukt het niet, voeg dan
+  handmatig regels toe met "+ regel toevoegen" en vul datum/tijd in — het FIT-bestand
+  werkt dan net zo goed.
+</details>
+
+<script>
+/* ====== kernlogica (geverifieerd tegen het officiële Garmin FIT-profiel) ====== */
+// eGym → Garmin FIT — kernlogica (parser + FIT-encoder), werkt in browser en Node.
+'use strict';
+
+// ---------- OCR-tekst parsen ----------
+const MONTHS = { jan:0, feb:1, mrt:2, apr:3, mei:4, jun:5, jul:6, aug:7, sep:8, okt:9, nov:10, dec:11 };
+
+function parseOcrTexts(texts) {
+  const exercises = [];
+  let dateInfo = null, expectedCount = null;
+
+  for (const text of texts) {
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+
+      const mCount = line.match(/(\d+)\s*Oefeningen/i);
+      if (mCount) expectedCount = parseInt(mCount[1], 10);
+
+      const mDate = line.match(/\b(?:ma|di|wo|do|vr|za|zo)\s+(\d{1,2})\s+(jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)\b[^\d]*(\d{1,2}):(\d{2})/i);
+      if (mDate) {
+        dateInfo = { day: parseInt(mDate[1],10), month: MONTHS[mDate[2].toLowerCase()],
+                     hour: parseInt(mDate[3],10), minute: parseInt(mDate[4],10) };
+      }
+
+      const mName = line.match(/^.{0,6}?EGYM\s+(?!Machine\b)(.+)$/);
+      if (mName) {
+        const name = mName[1].replace(/[^\w\s()-]/g, '').trim();
+        // statsregel binnen de volgende 3 regels zoeken
+        let sets = null, reps = null, kg = null, kcal = null;
+        for (let j = i + 1; j <= Math.min(i + 3, lines.length - 1); j++) {
+          const l = lines[j];
+          const mStats = l.match(/(\d+)\s*Sets\b.*?(\d+)\s*Herh(?:alingen)?\.?(.*)$/i);
+          if (mStats) {
+            sets = parseInt(mStats[1],10); reps = parseInt(mStats[2],10);
+            const tail = mStats[3];
+            const mKgSame = tail.match(/(\d+(?:[.,]\d+)?)\s*kg/i);
+            if (mKgSame) kg = parseFloat(mKgSame[1].replace(',', '.'));
+            else { const mTrail = tail.match(/(\d+(?:[.,]\d+)?)\s*$/); if (mTrail) kg = parseFloat(mTrail[1].replace(',', '.')); }
+            const mKcalSame = tail.match(/(\d+)\s*kcal/i);
+            if (mKcalSame) kcal = parseInt(mKcalSame[1],10);
+            // vervolgregel: "kg * 38 kcal" (evt. met gewicht ervoor als de statsregel dat miste)
+            if (kcal === null && j + 1 < lines.length) {
+              const l2 = lines[j+1];
+              const mNext = l2.match(/^\D{0,4}(\d+(?:[.,]\d+)?)?\s*kg\b\D*?(\d+)\s*kcal/i);
+              if (mNext) { if (kg === null && mNext[1]) kg = parseFloat(mNext[1].replace(',', '.')); kcal = parseInt(mNext[2],10); }
+              else {
+                // "<getal> kcal" los op de volgende regel
+                const mNumKcal = l2.match(/^\D{0,4}(\d+)\s*kcal\b/i);
+                if (mNumKcal) kcal = parseInt(mNumKcal[1], 10);
+                else {
+                  // kcal-getal staat aan het eind van deze regel, "kcal" zelf op de volgende regel
+                  const mTrailNum = tail.match(/(\d+)\s*$/);
+                  if (mTrailNum && /^\D{0,4}kcal\b/i.test(l2)) kcal = parseInt(mTrailNum[1], 10);
+                }
+              }
+            }
+            break;
+          }
+        }
+        if (sets !== null) exercises.push({ name, sets, reps, kg, kcal });
+      }
+    }
+  }
+
+  // ontdubbelen (overlappende screenshots), volgorde behouden
+  const seen = new Set(), unique = [];
+  for (const e of exercises) {
+    const key = [e.name, e.sets, e.reps, e.kg, e.kcal].join('|');
+    if (!seen.has(key)) { seen.add(key); unique.push(e); }
+  }
+  return { exercises: unique, dateInfo, expectedCount };
+}
+
+// ---------- cardio-OCR-tekst parsen (Crosstrainer / Loopband / Fiets) ----------
+const CARDIO_DEVICES = [
+  { key: 'loopband',     label: 'Loopband',     re: /\bloopband\b/i },
+  { key: 'fiets',        label: 'Fiets',        re: /\bfiets\b/i },
+  { key: 'crosstrainer', label: 'Crosstrainer', re: /\bcrosstrainer\b/i },
+];
+// volledige rij op één regel: "<set> <?min> <sec>s <km>"  (bv. "1 30s 0.02" of "4 4min 34s 0.3")
+const CARDIO_ROW_RE = /^(\d{1,2})\s+(?:(\d+)\s*min\s*)?(\d+)\s*s\b\s+(\d+(?:[.,]\d+)?)$/i;
+// losse duur-regel (fallback als set/km op aparte regels staan)
+const CARDIO_DUR_RE = /^(?:(\d+)\s*min\s*)?(\d+)\s*s$/i;
+const CARDIO_KM_RE = /^(\d+(?:[.,]\d+)?)$/;
+
+function parseCardioOcr(texts) {
+  const devices = { crosstrainer: [], loopband: [], fiets: [] };
+  for (const text of texts) {
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    let deviceKey = null;
+    for (const d of CARDIO_DEVICES) {
+      if (lines.some(l => d.re.test(l))) { deviceKey = d.key; break; }
+    }
+    if (!deviceKey) continue; // geen cardio-scherm in dit screenshot
+
+    const intervals = [];
+    for (let i = 0; i < lines.length; i++) {
+      const mRow = lines[i].match(CARDIO_ROW_RE);
+      if (mRow) {
+        const durationSec = (mRow[2] ? parseInt(mRow[2], 10) * 60 : 0) + parseInt(mRow[3], 10);
+        intervals.push({ durationSec, km: parseFloat(mRow[4].replace(',', '.')) });
+        continue;
+      }
+      // fallback: duur op eigen regel, km op een van de volgende regels
+      const mDur = lines[i].match(CARDIO_DUR_RE);
+      if (mDur) {
+        for (let j = i + 1; j <= Math.min(i + 2, lines.length - 1); j++) {
+          const mKm = lines[j].match(CARDIO_KM_RE);
+          if (mKm) {
+            const durationSec = (mDur[1] ? parseInt(mDur[1], 10) * 60 : 0) + parseInt(mDur[2], 10);
+            intervals.push({ durationSec, km: parseFloat(mKm[1].replace(',', '.')) });
+            break;
+          }
+        }
+      }
+    }
+    if (intervals.length) devices[deviceKey].push(...intervals);
+  }
+  return devices;
+}
+
+// apparaat → FIT sport/sub_sport (geverifieerd tegen echte Garmin/Strava-sync)
+const CARDIO_SPORT = {
+  loopband:     { sport: 1, subSport: 1,  label: 'Hardlopen (loopband)' },  // running / treadmill
+  fiets:        { sport: 2, subSport: 6,  label: 'Fietsen (indoor)' },      // cycling / indoor_cycling
+  crosstrainer: { sport: 4, subSport: 15, label: 'Crosstrainer' },          // fitness_equipment / elliptical
+};
+
+// ---------- oefening → Garmin FIT-oefening ----------
+// Catalogus van (category, subtype)-paren, stuk voor stuk geverifieerd tegen het
+// officiële Garmin FIT-profiel (garmin-fit-sdk). Elke regel krijgt een expliciete
+// oefeningcode; Garmin hoeft nooit te raden en laat niets weg.
+const GARMIN_EXERCISES = [
+  { label: 'Chest Press',            cat: 0,  sub: 6  },  // bench_press / dumbbell_bench_press — Strava: "Dumbbell Bench Press"
+  { label: 'Fly (butterfly)',        cat: 9,  sub: 2  },  // flye / dumbbell_flye — Strava: "Dumbbell Flye"
+  { label: 'Reverse Flye',           cat: 9,  sub: 6  },  // flye / single_arm_standing_cable_reverse_flye — Strava: "Dumbbell Rear Delt Fly"
+  { label: 'Shoulder Press',         cat: 24, sub: 20 },  // shoulder_press / smith_machine_overhead_press
+  { label: 'Lat Pulldown',           cat: 21, sub: 13 },  // pull_up / lat_pulldown
+  { label: 'Seated Cable Row',       cat: 23, sub: 18 },  // row / seated_cable_row
+  { label: 'Back Extension',         cat: 13, sub: 27 },  // hyperextension / static_back_extension — Strava: "Back Extension"
+  { label: 'Crunch',                 cat: 6,  sub: 83 },  // crunch / crunch
+  { label: 'Russian Twist (torso)',  cat: 5,  sub: 46 },  // core / russian_twist
+  { label: 'Leg Press',              cat: 28, sub: 0  },  // squat / leg_press
+  { label: 'Leg Extension',          cat: 6,  sub: 33 },  // crunch / leg_extensions — Strava: "Leg Extensions"
+  { label: 'Leg Curl',               cat: 15, sub: 0  },  // leg_curl / leg_curl
+  { label: 'Hip Extension (glutes)', cat: 10, sub: 21 },  // hip_raise / incline_rear_leg_extension — Strava: "Glute Kickback on Floor"
+  { label: 'Leg Abduction',          cat: 11, sub: 28 },  // hip_stability / standing_hip_abduction — Strava: "Standing Hip Abduction"
+  { label: 'Leg Adduction',          cat: 11, sub: 25 },  // hip_stability / standing_adduction — Strava: "Standing Adduction"
+  { label: 'Calf Raise',             cat: 1,  sub: 6  },  // calf_raise / seated_calf_raise — Strava: "Seated Calf Raise"
+  { label: 'Biceps Curl',            cat: 7,  sub: 8  },  // curl / cable_biceps_curl
+  { label: 'Triceps Press',          cat: 30, sub: 39 },  // triceps_extension / triceps_pressdown — Strava: "Triceps Pressdown"
+  { label: 'Lateral Raise',          cat: 14, sub: 24 },  // lateral_raise / seated_lateral_raise — Strava: "Lateral Raise"
+  { label: 'Shrug',                  cat: 26, sub: 1  },  // shrug / barbell_shrug
+  { label: 'Deadlift',               cat: 8,  sub: 0  },  // deadlift / barbell_deadlift
+  { label: 'Squat',                  cat: 28, sub: 62 },  // squat / weighted_squat — Strava: "Squat"
+  { label: 'Pull Up',                cat: 21, sub: 38 },  // pull_up / pull_up
+  { label: 'Hip Raise (bridge)',     cat: 10, sub: 11 },  // hip_raise / hip_raise
+  { label: 'Plank',                  cat: 19, sub: 43 },  // plank / plank
+  { label: 'Row',                    cat: 23, sub: 2  },  // row / dumbbell_row — Strava: "Dumbbell Row"
+];
+// eGym-naam → index hierboven. Volgorde telt: specifiek vóór generiek.
+const NAME_MATCH = [
+  [/chest press/i, 0],
+  [/reverse\s*(butterfly|fly)|rear\s*delt|butterfly\s*reverse/i, 2],
+  [/butterfly|(^|\s)flye?(\s|$)/i, 1],
+  [/shoulder press|overhead press/i, 3],
+  [/lat ?pull ?down|latpull|pulldown/i, 4],
+  [/seated row|(^|\s)row(ing)?(\s|$)/i, 5],
+  [/back extension|lower back|hyperextension/i, 6],
+  [/abdominal|crunch/i, 7],
+  [/rotary torso|torso|rotary/i, 8],
+  [/leg press/i, 9],
+  [/leg extension|knee extension/i, 10],
+  [/leg curl|hamstring/i, 11],
+  [/glute/i, 12],
+  [/abduct/i, 13],
+  [/adduct/i, 14],
+  [/calf/i, 15],
+  [/biceps?|arm curl/i, 16],
+  [/triceps?|dip(s)?\b/i, 17],
+  [/lateral raise|side raise/i, 18],
+  [/shrug|trapez/i, 19],
+  [/deadlift/i, 20],
+  [/squat/i, 21],
+  [/pull.?up|chin.?up/i, 22],
+  [/hip raise|glute bridge|hip thrust|bridge/i, 23],
+  [/plank/i, 24],
+];
+function matchExercise(name) {
+  for (const [re, idx] of NAME_MATCH) if (re.test(name)) return idx;
+  return null; // geen match → gebruiker kiest zelf in de app
+}
+// compat: geeft [cat, sub]
+function mapCategory(name) {
+  const idx = matchExercise(name);
+  return idx === null ? [65534, null] : [GARMIN_EXERCISES[idx].cat, GARMIN_EXERCISES[idx].sub];
+}
+
+// ---------- FIT-encoder ----------
+const FIT_EPOCH = 631065600; // 1989-12-31T00:00:00Z in unix-seconden
+const fitTime = (unixSec) => Math.round(unixSec) - FIT_EPOCH;
+
+// CRC-16 (FIT)
+const CRC_TABLE = [0x0000,0xCC01,0xD801,0x1400,0xF001,0x3C00,0x2800,0xE401,0xA001,0x6C00,0x7800,0xB401,0x5000,0x9C01,0x8801,0x4400];
+function fitCrc(bytes, crc = 0) {
+  for (const b of bytes) {
+    let tmp = CRC_TABLE[crc & 0xF];
+    crc = (crc >> 4) & 0x0FFF;
+    crc = crc ^ tmp ^ CRC_TABLE[b & 0xF];
+    tmp = CRC_TABLE[crc & 0xF];
+    crc = (crc >> 4) & 0x0FFF;
+    crc = crc ^ tmp ^ CRC_TABLE[(b >> 4) & 0xF];
+  }
+  return crc & 0xFFFF;
+}
+
+// basetypes: [byte, size, invalid]
+const BT = {
+  enum:   [0x00, 1, 0xFF],
+  uint8:  [0x02, 1, 0xFF],
+  uint16: [0x84, 2, 0xFFFF],
+  uint32: [0x86, 4, 0xFFFFFFFF],
+  uint32z:[0x8C, 4, 0x00000000],
+};
+
+class FitWriter {
+  constructor() { this.chunks = []; this.defs = new Map(); this.nextLocal = 0; }
+  _push(arr) { this.chunks.push(Uint8Array.from(arr)); }
+  writeMessage(globalNum, fields /* [defNum, btName, value|null] */) {
+    const sig = globalNum + ':' + fields.map(f => f[0] + f[1]).join(',');
+    let local = this.defs.get(sig);
+    if (local === undefined) {
+      local = this.nextLocal++;
+      this.defs.set(sig, local);
+      const def = [0x40 | local, 0, 0, globalNum & 0xFF, (globalNum >> 8) & 0xFF, fields.length];
+      for (const [num, bt] of fields) def.push(num, BT[bt][1], BT[bt][0]);
+      this._push(def);
+    }
+    const data = [0x00 | local];
+    for (const [, bt, value] of fields) {
+      const [, size, invalid] = BT[bt];
+      let v = (value === null || value === undefined) ? invalid : Math.round(value);
+      v = v >>> 0;
+      for (let i = 0; i < size; i++) data.push((v >>> (8 * i)) & 0xFF);
+    }
+    this._push(data);
+  }
+  build() {
+    let dataSize = 0; for (const c of this.chunks) dataSize += c.length;
+    const header = new Uint8Array(14);
+    const dv = new DataView(header.buffer);
+    header[0] = 14; header[1] = 0x20;            // headerlengte, protocol 2.0
+    dv.setUint16(2, 2194, true);                  // profielversie
+    dv.setUint32(4, dataSize, true);
+    header[8] = 0x2E; header[9] = 0x46; header[10] = 0x49; header[11] = 0x54; // ".FIT"
+    dv.setUint16(12, fitCrc(header.subarray(0, 12)), true);
+    const total = new Uint8Array(14 + dataSize + 2);
+    total.set(header, 0);
+    let off = 14;
+    for (const c of this.chunks) { total.set(c, off); off += c.length; }
+    const crc = fitCrc(total.subarray(0, off));
+    total[off] = crc & 0xFF; total[off + 1] = (crc >> 8) & 0xFF;
+    return total;
+  }
+}
+
+/**
+ * exercises: [{name, sets, reps, kg, kcal}]
+ * startUnixSec: aanvang (unix-seconden, UTC)
+ * tzOffsetSec: lokale offset t.o.v. UTC (bv. 7200 voor NL-zomertijd)
+ */
+function buildFit(exercises, startUnixSec, tzOffsetSec, opts = {}) {
+  const ACTIVE_S = opts.activeSeconds ?? 60;
+  const REST_S = opts.restSeconds ?? 50;
+  const nSets = exercises.reduce((a, e) => a + e.sets, 0);
+  const totalS = nSets * ACTIVE_S + (nSets - 1) * REST_S;
+  const endUnixSec = startUnixSec + totalS;
+  const totalKcal = exercises.reduce((a, e) => a + (e.kcal || 0), 0);
+
+  const w = new FitWriter();
+  w.writeMessage(0, [ // file_id
+    [0, 'enum', 4],            // type: activity
+    [1, 'uint16', 255],        // manufacturer: development
+    [2, 'uint16', 0],
+    [3, 'uint32z', 0x12345678],
+    [4, 'uint32', fitTime(startUnixSec)],
+  ]);
+  w.writeMessage(21, [[253, 'uint32', fitTime(startUnixSec)], [0, 'enum', 0], [1, 'enum', 0]]); // timer start
+
+  let t = startUnixSec, idx = 0, first = true;
+  const setMsg = (fields) => w.writeMessage(225, fields);
+  for (const e of exercises) {
+    // e.garmin = index in GARMIN_EXERCISES (uit de UI); anders automatisch matchen
+    let cat, sub;
+    if (Number.isInteger(e.garmin) && GARMIN_EXERCISES[e.garmin]) {
+      ({ cat, sub } = GARMIN_EXERCISES[e.garmin]);
+    } else {
+      [cat, sub] = mapCategory(e.name);
+    }
+    for (let s = 0; s < e.sets; s++) {
+      if (!first) {
+        setMsg([
+          [254, 'uint32', fitTime(t + REST_S)], [0, 'uint32', REST_S * 1000],
+          [3, 'uint16', null], [4, 'uint16', null], [5, 'uint8', 0],
+          [6, 'uint32', fitTime(t)], [7, 'uint16', null], [8, 'uint16', null],
+          [10, 'uint16', idx],
+        ]);
+        idx++; t += REST_S;
+      }
+      first = false;
+      setMsg([
+        [254, 'uint32', fitTime(t + ACTIVE_S)], [0, 'uint32', ACTIVE_S * 1000],
+        [3, 'uint16', e.reps], [4, 'uint16', Math.round(e.kg * 16)], [5, 'uint8', 1],
+        [6, 'uint32', fitTime(t)], [7, 'uint16', cat], [8, 'uint16', sub === null ? null : sub],
+        [10, 'uint16', idx],
+      ]);
+      idx++; t += ACTIVE_S;
+    }
+  }
+
+  w.writeMessage(21, [[253, 'uint32', fitTime(endUnixSec)], [0, 'enum', 0], [1, 'enum', 4]]); // timer stop_all
+  w.writeMessage(19, [ // lap
+    [253, 'uint32', fitTime(endUnixSec)], [2, 'uint32', fitTime(startUnixSec)],
+    [7, 'uint32', totalS * 1000], [8, 'uint32', totalS * 1000], [11, 'uint16', totalKcal],
+  ]);
+  w.writeMessage(18, [ // session
+    [253, 'uint32', fitTime(endUnixSec)], [2, 'uint32', fitTime(startUnixSec)],
+    [7, 'uint32', totalS * 1000], [8, 'uint32', totalS * 1000],
+    [5, 'enum', 10], [6, 'enum', 20],           // sport training / strength_training
+    [11, 'uint16', totalKcal], [25, 'uint16', 0], [26, 'uint16', 1],
+  ]);
+  w.writeMessage(34, [ // activity
+    [253, 'uint32', fitTime(endUnixSec)], [0, 'uint32', totalS * 1000],
+    [1, 'uint16', 1], [5, 'uint32', fitTime(endUnixSec) + tzOffsetSec],
+  ]);
+  return { bytes: w.build(), totalS, totalKcal, nSets, endUnixSec };
+}
+
+/**
+ * intervals: [{durationSec, km}]  (in volgorde, zoals van het scherm)
+ * equipment: 'loopband' | 'fiets' | 'crosstrainer'
+ */
+function buildCardioFit(equipment, intervals, startUnixSec, tzOffsetSec) {
+  const sp = CARDIO_SPORT[equipment];
+  if (!sp) throw new Error(`Onbekend cardio-apparaat: ${equipment}`);
+  const totalS = intervals.reduce((a, iv) => a + iv.durationSec, 0);
+  const totalKm = intervals.reduce((a, iv) => a + iv.km, 0);
+  const totalM = totalKm * 1000;
+  const endUnixSec = startUnixSec + totalS;
+
+  const w = new FitWriter();
+  w.writeMessage(0, [ // file_id
+    [0, 'enum', 4], [1, 'uint16', 255], [2, 'uint16', 0],
+    [3, 'uint32z', 0x12345678], [4, 'uint32', fitTime(startUnixSec)],
+  ]);
+  w.writeMessage(21, [[253, 'uint32', fitTime(startUnixSec)], [0, 'enum', 0], [1, 'enum', 0]]); // timer start
+
+  let t = startUnixSec, cumM = 0;
+  const recMsg = (fields) => w.writeMessage(20, fields);
+  const lapMsg = (fields) => w.writeMessage(19, fields);
+  // startpunt van de sessie (0 m)
+  recMsg([[253, 'uint32', fitTime(t)], [5, 'uint32', 0], [6, 'uint16', 0]]);
+
+  intervals.forEach((iv, i) => {
+    const segM = iv.km * 1000;
+    const dur = Math.max(iv.durationSec, 1); // voorkom delen door 0
+    const speed = segM / dur; // m/s
+    const tStart = t;
+    t += iv.durationSec;
+    cumM += segM;
+    recMsg([[253, 'uint32', fitTime(t)], [5, 'uint32', cumM * 100], [6, 'uint16', speed * 1000]]);
+    lapMsg([
+      [0, 'enum', 9],                          // event: lap
+      [1, 'enum', 1],                          // event_type: stop
+      [253, 'uint32', fitTime(t)],
+      [2, 'uint32', fitTime(tStart)],
+      [7, 'uint32', iv.durationSec * 1000], [8, 'uint32', iv.durationSec * 1000],
+      [9, 'uint32', Math.round(segM * 100)],
+      [13, 'uint16', Math.round(speed * 1000)],
+      [254, 'uint16', i],
+    ]);
+  });
+
+  w.writeMessage(21, [[253, 'uint32', fitTime(endUnixSec)], [0, 'enum', 0], [1, 'enum', 4]]); // timer stop_all
+  w.writeMessage(18, [ // session
+    [253, 'uint32', fitTime(endUnixSec)], [2, 'uint32', fitTime(startUnixSec)],
+    [5, 'enum', sp.sport], [6, 'enum', sp.subSport],
+    [7, 'uint32', totalS * 1000], [8, 'uint32', totalS * 1000],
+    [9, 'uint32', Math.round(totalM * 100)],
+    [14, 'uint16', totalS > 0 ? Math.round((totalM / totalS) * 1000) : 0],
+    [25, 'uint16', 0], [26, 'uint16', intervals.length],
+  ]);
+  w.writeMessage(34, [ // activity
+    [253, 'uint32', fitTime(endUnixSec)], [0, 'uint32', totalS * 1000],
+    [1, 'uint16', 1], [5, 'uint32', fitTime(endUnixSec) + tzOffsetSec],
+  ]);
+  return { bytes: w.build(), totalS, totalKm, nIntervals: intervals.length, endUnixSec };
+}
+
+
+/* ====== UI ====== */
+const APP_VERSION = '1.4.0'; // bij elke update ophogen + wijziging bijhouden in CHANGELOG.md (Drive)
+const $ = id => document.getElementById(id);
+const tbl = $('tbl');
+let expectedCount = null;
+
+$('verTag').textContent = 'v' + APP_VERSION;
+$('pick').addEventListener('click', () => $('files').click());
+$('files').addEventListener('change', e => { if (e.target.files.length) runOcr([...e.target.files]); });
+
+function setStatus(msg, ok) { $('status').textContent = msg; $('status').className = ok ? 'ok' : ''; }
+
+// Tesseract wordt pas geladen zodra hij nodig is (niet blokkerend bij het openen
+// van de app), met een tijdslimiet zodat een trage/ontbrekende verbinding de knop
+// "Screenshots kiezen" nooit onbruikbaar maakt.
+let tesseractLoadPromise = null;
+function loadTesseract() {
+  if (window.Tesseract) return Promise.resolve();
+  if (tesseractLoadPromise) return tesseractLoadPromise;
+  tesseractLoadPromise = new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error('duurde te lang (geen internet?)')), 20000);
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js';
+    s.onload = () => { clearTimeout(timeout); resolve(); };
+    s.onerror = () => { clearTimeout(timeout); reject(new Error('kon niet laden (geen internet?)')); };
+    document.head.appendChild(s);
+  }).catch(err => { tesseractLoadPromise = null; throw err; }); // opnieuw proberen toegestaan bij volgende poging
+  return tesseractLoadPromise;
+}
+
+async function upscale(file) {
+  const img = await createImageBitmap(file);
+  const c = document.createElement('canvas');
+  c.width = img.width * 2; c.height = img.height * 2;
+  const ctx = c.getContext('2d');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.filter = 'grayscale(1)';
+  ctx.drawImage(img, 0, 0, c.width, c.height);
+  return new Promise(res => c.toBlob(res, 'image/png'));
+}
+
+async function runOcr(fileList) {
+  try {
+    setStatus('Tekstherkenning laden…');
+    await loadTesseract();
+    const worker = await Tesseract.createWorker('eng');
+    const texts = [];
+    for (let i = 0; i < fileList.length; i++) {
+      setStatus(`Screenshot ${i + 1} van ${fileList.length} lezen…`);
+      const blob = await upscale(fileList[i]);
+      const { data } = await worker.recognize(blob);
+      texts.push(data.text);
+    }
+    await worker.terminate();
+    window.__lastOcrTexts = texts;
+    const parsed = parseOcrTexts(texts);
+    const cardioDevices = parseCardioOcr(texts);
+    const nCardio = Object.values(cardioDevices).reduce((a, arr) => a + (arr.length ? 1 : 0), 0);
+    showResult(parsed, cardioDevices);
+    const bits = [];
+    if (parsed.exercises.length) bits.push(`${parsed.exercises.length} oefening(en)`);
+    if (nCardio) bits.push(`${nCardio} cardio-apparaat(en)`);
+    setStatus(bits.length ? `${bits.join(', ')} herkend.` : 'Niets herkend — voeg handmatig toe.', bits.length > 0);
+  } catch (err) {
+    setStatus('Tekstherkenning mislukt: ' + err.message + ' — voeg regels handmatig toe.');
+    showResult({ exercises: [], dateInfo: null, expectedCount: null }, { crosstrainer: [], loopband: [], fiets: [] });
+  }
+}
+
+function showResult(parsed, cardioDevices) {
+  expectedCount = parsed.expectedCount;
+  [...tbl.querySelectorAll('tbody.exrow')].forEach(tb => tb.remove());
+  for (const e of parsed.exercises) addRow(e);
+  const now = new Date();
+  let d = now;
+  if (parsed.dateInfo) {
+    const di = parsed.dateInfo;
+    d = new Date(now.getFullYear(), di.month, di.day, di.hour, di.minute);
+    if (d.getTime() - now.getTime() > 86400e3) d.setFullYear(d.getFullYear() - 1);
+  }
+  $('dat').value = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  $('tijd').value = parsed.dateInfo ? `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}` : '';
+  $('resultCard').classList.remove('hidden');
+  $('fitCard').classList.toggle('hidden', parsed.exercises.length === 0);
+  checkCount();
+  showCardioResult(cardioDevices || { crosstrainer: [], loopband: [], fiets: [] });
+}
+
+function showCardioResult(cardioDevices) {
+  const container = $('cardioDevices');
+  container.innerHTML = '';
+  const anyDevice = CARDIO_DEVICES.some(d => (cardioDevices[d.key] || []).length);
+  $('cardioCard').classList.toggle('hidden', !anyDevice);
+  for (const d of CARDIO_DEVICES) {
+    const intervals = cardioDevices[d.key] || [];
+    if (!intervals.length) continue;
+    addCardioDeviceBlock(d.key, d.label, intervals);
+  }
+}
+
+function addCardioDeviceBlock(deviceKey, label, intervals) {
+  const box = document.createElement('div');
+  box.className = 'cardioDevice';
+  box.dataset.device = deviceKey;
+  box.innerHTML =
+    `<h3>${label}</h3>
+     <table class="cardioTbl">
+       <thead><tr><th>#</th><th>min</th><th>sec</th><th>km</th><th></th></tr></thead>
+       <tbody></tbody>
+     </table>
+     <div class="btnrow">
+       <button class="secondary addCiv" style="flex:1">+ interval</button>
+       <button class="makeCardioFit" style="flex:2">Maak &amp; download FIT-bestand</button>
+     </div>
+     <div class="cardioSummary"></div>`;
+  const tbody = box.querySelector('tbody');
+  const addRowTo = (iv = { durationSec: 0, km: 0 }) => {
+    const min = Math.floor(iv.durationSec / 60), sec = iv.durationSec % 60;
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      `<td class="idx"></td>
+       <td class="num"><input inputmode="numeric" class="civ-min" value="${min}"></td>
+       <td class="num"><input inputmode="numeric" class="civ-sec" value="${sec}"></td>
+       <td class="num"><input inputmode="decimal" class="civ-km" value="${iv.km}"></td>
+       <td class="del">✕</td>`;
+    tr.querySelector('.del').addEventListener('click', () => { tr.remove(); renumber(); });
+    tbody.appendChild(tr);
+    renumber();
+  };
+  const renumber = () => {
+    [...tbody.querySelectorAll('tr')].forEach((tr, i) => { tr.querySelector('.idx').textContent = i + 1; });
+  };
+  for (const iv of intervals) addRowTo(iv);
+  box.querySelector('.addCiv').addEventListener('click', () => addRowTo());
+  box.querySelector('.makeCardioFit').addEventListener('click', () => {
+    const summary = box.querySelector('.cardioSummary');
+    try {
+      const ivs = [...tbody.querySelectorAll('tr')].map(tr => {
+        const min = parseInt(tr.querySelector('.civ-min').value, 10) || 0;
+        const sec = parseInt(tr.querySelector('.civ-sec').value, 10) || 0;
+        const km = parseFloat((tr.querySelector('.civ-km').value || '0').replace(',', '.')) || 0;
+        return { durationSec: min * 60 + sec, km };
+      }).filter(iv => iv.durationSec > 0);
+      if (!ivs.length) throw new Error('Geen intervallen ingevuld.');
+      const [y, mo, da] = $('dat').value.split('-').map(Number);
+      const [hh, mm] = $('tijd').value.split(':').map(Number);
+      if (!y || isNaN(hh)) throw new Error('Vul datum en aanvangstijd in (boven).');
+      const local = new Date(y, mo - 1, da, hh, mm);
+      const startUnix = local.getTime() / 1000;
+      const tzOffsetSec = -local.getTimezoneOffset() * 60;
+      const { bytes, totalS, totalKm } = buildCardioFit(deviceKey, ivs, startUnix, tzOffsetSec);
+      const fname = `egym_${deviceKey}_${$('dat').value}.fit`;
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
+      a.download = fname;
+      document.body.appendChild(a); a.click(); a.remove();
+      summary.innerHTML = `<span class="ok">✓</span> ${fname} — ${Math.round(totalS/60)} min, ${totalKm.toFixed(2)} km. Staat in je Downloads.`;
+      $('garminCard').classList.remove('hidden');
+    } catch (err) { summary.textContent = err.message; }
+  });
+  $('cardioDevices').appendChild(box);
+}
+
+function optionsHtml(selected) {
+  let h = `<option value=""${selected === null ? ' selected' : ''}>— kies Garmin-oefening —</option>`;
+  GARMIN_EXERCISES.forEach((g, i) => {
+    h += `<option value="${i}"${i === selected ? ' selected' : ''}>${g.label}</option>`;
+  });
+  return h;
+}
+
+function addRow(e = {}) {
+  const idx = e.name ? matchExercise(e.name) : null;
+  const tb = document.createElement('tbody');
+  tb.className = 'exrow';
+  tb.innerHTML =
+    `<tr class="r1">
+       <td><input class="nm" value="${(e.name || '').replace(/"/g,'&quot;')}" placeholder="Oefening"></td>
+       <td class="num"><input inputmode="numeric" value="${e.sets ?? ''}"></td>
+       <td class="num"><input inputmode="numeric" value="${e.reps ?? ''}"></td>
+       <td class="num"><input inputmode="decimal" value="${e.kg ?? ''}"></td>
+       <td class="num"><input inputmode="numeric" value="${e.kcal ?? ''}"></td>
+       <td class="del">✕</td>
+     </tr>
+     <tr class="r2"><td colspan="6"><span class="garmlabel">Garmin</span>
+       <select class="gsel">${optionsHtml(idx)}</select></td></tr>`;
+  tb.querySelector('.del').addEventListener('click', () => { tb.remove(); checkCount(); });
+  const sel = tb.querySelector('.gsel');
+  const paint = () => sel.classList.toggle('unset', sel.value === '');
+  sel.addEventListener('change', paint); paint();
+  // handmatig getypte naam → automatisch voorstel zolang niets is gekozen
+  tb.querySelector('.nm').addEventListener('input', ev => {
+    if (sel.dataset.touched) return;
+    const i = matchExercise(ev.target.value);
+    sel.value = i === null ? '' : String(i);
+    paint();
+  });
+  sel.addEventListener('change', () => { sel.dataset.touched = '1'; });
+  tbl.appendChild(tb);
+}
+$('addRow').addEventListener('click', () => addRow());
+
+function checkCount() {
+  const n = tbl.querySelectorAll('tbody.exrow').length;
+  const w = $('countWarn');
+  if (expectedCount !== null && n !== expectedCount) {
+    w.textContent = `Let op: de app meldt ${expectedCount} oefeningen, hier staan er ${n}. Ontbreekt er een screenshot?`;
+    w.classList.remove('hidden');
+  } else w.classList.add('hidden');
+}
+
+function readRows() {
+  const out = [];
+  for (const tb of tbl.querySelectorAll('tbody.exrow')) {
+    const inputs = [...tb.querySelectorAll('.r1 input')];
+    const [name, sets, reps, kg, kcal] = inputs.map(i => i.value.trim());
+    if (!name) continue;
+    const g = tb.querySelector('.gsel').value;
+    const e = { name, sets: parseInt(sets,10), reps: parseInt(reps,10),
+                kg: parseFloat((kg||'').replace(',', '.')), kcal: parseInt(kcal,10) || 0,
+                garmin: g === '' ? null : parseInt(g,10) };
+    if (!(e.sets > 0) || !(e.reps > 0) || !(e.kg >= 0)) throw new Error(`Regel "${name}" is niet compleet (sets/herhalingen/kg).`);
+    out.push(e);
+  }
+  if (!out.length) throw new Error('Geen oefeningen ingevuld.');
+  return out;
+}
+
+$('makeFit').addEventListener('click', () => {
+  try {
+    const ex = readRows();
+    const [y, mo, da] = $('dat').value.split('-').map(Number);
+    const [hh, mm] = $('tijd').value.split(':').map(Number);
+    if (!y || isNaN(hh)) throw new Error('Vul datum en aanvangstijd in.');
+    const local = new Date(y, mo - 1, da, hh, mm);
+    const startUnix = local.getTime() / 1000;
+    const tzOffsetSec = -local.getTimezoneOffset() * 60;
+    const opts = { activeSeconds: +$('activeS').value || 60, restSeconds: +$('restS').value || 50 };
+    const { bytes, totalS, totalKcal, nSets } = buildFit(ex, startUnix, tzOffsetSec, opts);
+    const fname = `egym_krachttraining_${$('dat').value}.fit`;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
+    a.download = fname;
+    document.body.appendChild(a); a.click(); a.remove();
+    const zonder = ex.filter(e => e.garmin === null).length;
+    $('summary').innerHTML = `<span class="ok">✓</span> ${fname} — ${ex.length} oefeningen, ${nSets} sets, ` +
+      `${Math.round(totalS/60)} min, ${totalKcal} kcal. Het bestand staat in je Downloads.` +
+      (zonder ? `<br><span class="warnline">${zonder} oefening(en) zonder Garmin-keuze: die verschijnen als "onbekende oefening".</span>` : '');
+    $('garminCard').classList.remove('hidden');
+  } catch (err) { $('summary').textContent = err.message; }
+});
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>

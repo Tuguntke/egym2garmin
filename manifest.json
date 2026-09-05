@@ -1,0 +1,16 @@
+{
+  "name": "eGym naar Garmin",
+  "short_name": "eGym→Garmin",
+  "description": "Zet eGym-trainingsscreenshots om naar een FIT-bestand voor Garmin Connect (en automatisch Strava).",
+  "start_url": "index.html",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#0b0c0d",
+  "theme_color": "#0b0c0d",
+  "lang": "nl",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
