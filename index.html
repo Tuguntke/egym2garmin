@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,6 +21,10 @@
   h1 { font-size:1.15rem; margin:0 0 2px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
   .verTag { flex:none; font-size:.66rem; color:var(--muted); border:1px solid var(--line); border-radius:999px;
     padding:3px 9px; letter-spacing:.03em; white-space:nowrap; margin-top:2px; }
+  .topRight { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex:none; }
+  .langSel { flex:none; font-size:.66rem; font-weight:700; color:var(--ink); background:var(--card2);
+    border:1px solid var(--line); border-radius:999px; padding:3px 9px; letter-spacing:.03em;
+    -webkit-appearance:none; appearance:none; cursor:pointer; }
   .sub { color:var(--muted); font-size:.85rem; margin-bottom:18px; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:14px; }
   .step { display:flex; align-items:center; gap:9px; font-weight:700; margin-bottom:12px;
@@ -80,68 +84,75 @@
 <div class="topbar">
   <div>
     <h1>eGym → Garmin</h1>
-    <div class="sub">Screenshots van "Details van de training" → FIT-bestand → Garmin Connect (Strava volgt automatisch)</div>
+    <div class="sub" data-i18n="sub">Screenshots of "Training details" → FIT file → Garmin Connect (Strava follows automatically)</div>
   </div>
-  <span class="verTag" id="verTag"></span>
+  <div class="topRight">
+    <select id="langSel" class="langSel">
+      <option value="en">EN</option>
+      <option value="de">DE</option>
+      <option value="nl">NL</option>
+    </select>
+    <span class="verTag" id="verTag"></span>
+  </div>
 </div>
 
 <div class="card">
-  <div class="step"><span class="n">1</span> Kies je eGym-screenshots</div>
+  <div class="step"><span class="n">1</span> <span data-i18n="step1">Choose your eGym screenshots</span></div>
   <input type="file" id="files" accept="image/*" multiple class="hidden">
-  <button id="pick">Screenshots kiezen</button>
+  <button id="pick" data-i18n="pick">Choose screenshots</button>
   <div id="status"></div>
 </div>
 
 <div class="card hidden" id="resultCard">
-  <div class="step"><span class="n">2</span> Controleer de gegevens</div>
+  <div class="step"><span class="n">2</span> <span data-i18n="step2">Check the data</span></div>
   <div class="rowline">
-    <label>Datum<br><input type="date" id="dat"></label>
-    <label>Aanvangstijd<br><input type="time" id="tijd"></label>
+    <label><span data-i18n="labelDate">Date</span><br><input type="date" id="dat"></label>
+    <label><span data-i18n="labelTime">Start time</span><br><input type="time" id="tijd"></label>
   </div>
   <table id="tbl">
-    <thead><tr><th>Oefening</th><th>Sets</th><th>Herh.</th><th>kg</th><th>kcal</th><th></th></tr></thead>
+    <thead><tr><th data-i18n="thExercise">Exercise</th><th data-i18n="thSets">Sets</th><th data-i18n="thReps">Reps</th><th data-i18n="thKg">kg</th><th data-i18n="thKcal">kcal</th><th></th></tr></thead>
   </table>
-  <div style="margin-top:8px"><button class="secondary" id="addRow" style="padding:8px">+ regel toevoegen</button></div>
+  <div style="margin-top:8px"><button class="secondary" id="addRow" style="padding:8px" data-i18n="addRow">+ add row</button></div>
   <div id="countWarn" class="warn hidden"></div>
   <div style="font-size:.8rem;color:var(--muted);margin-top:8px">
-    Onder elke oefening staat de Garmin-oefening die wordt gebruikt. Klopt hij niet? Kies zelf een andere.
+    <span data-i18n="garminNote">Below each exercise is the Garmin exercise that will be used. Not right? Choose a different one.</span>
   </div>
-  <details><summary>Instellingen</summary>
+  <details><summary data-i18n="settings">Settings</summary>
     <div class="rowline">
-      <label>Seconden per set<br><input type="number" id="activeS" value="60"></label>
-      <label>Rust tussen sets (s)<br><input type="number" id="restS" value="50"></label>
+      <label><span data-i18n="activeLabel">Seconds per set</span><br><input type="number" id="activeS" value="60"></label>
+      <label><span data-i18n="restLabel">Rest between sets (s)</span><br><input type="number" id="restS" value="50"></label>
     </div>
   </details>
 </div>
 
 <div class="card hidden" id="fitCard">
-  <div class="step"><span class="n">3</span> FIT-bestand (krachttraining)</div>
-  <button id="makeFit">Maak &amp; download FIT-bestand</button>
+  <div class="step"><span class="n">3</span> <span data-i18n="step3fit">FIT file (strength training)</span></div>
+  <button id="makeFit" data-i18n="makeFit">Create &amp; download FIT file</button>
   <div id="summary"></div>
 </div>
 
 <div class="card hidden" id="cardioCard">
-  <div class="step"><span class="n">3</span> Cardio-apparaten</div>
+  <div class="step"><span class="n">3</span> <span data-i18n="step3cardio">Cardio machines</span></div>
   <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px">
-    Gebruikt dezelfde datum/aanvangstijd hierboven. Elk apparaat wordt een eigen FIT-bestand.
+    <span data-i18n="cardioNote">Uses the same date/start time as above. Each machine becomes its own FIT file.</span>
   </div>
   <div id="cardioDevices"></div>
 </div>
 
 <div class="card hidden" id="garminCard">
-  <div class="step"><span class="n">4</span> Importeren</div>
-  <a class="btn" href="https://connect.garmin.com/modern/import-data" target="_blank" rel="noopener">Open Garmin Connect Import</a>
-  <details><summary>Hoe verder?</summary>
-    Kies op de Garmin-pagina "Gegevens importeren", selecteer het zojuist gedownloade
-    .fit-bestand (staat in je Downloads-map) en bevestig. Als je Garmin-Strava-koppeling
-    aanstaat, verschijnt de training daarna automatisch in Strava.
+  <div class="step"><span class="n">4</span> <span data-i18n="step4">Import</span></div>
+  <a class="btn" href="https://connect.garmin.com/modern/import-data" target="_blank" rel="noopener" data-i18n="garminLink">Open Garmin Connect Import</a>
+  <details><summary data-i18n="howFurther">What's next?</summary>
+    <span data-i18n="howFurtherText">On the Garmin page choose "Import Data", select the .fit file you just
+    downloaded (in your Downloads folder) and confirm. If your Garmin-Strava link is
+    active, the activity will appear in Strava automatically.</span>
   </details>
 </div>
 
-<details style="margin-top:4px"><summary>Werkt de tekstherkenning niet?</summary>
-  Tekstherkenning heeft (de eerste keer) internet nodig. Lukt het niet, voeg dan
-  handmatig regels toe met "+ regel toevoegen" en vul datum/tijd in — het FIT-bestand
-  werkt dan net zo goed.
+<details style="margin-top:4px"><summary data-i18n="ocrTroubleSummary">Text recognition not working?</summary>
+  <span data-i18n="ocrTroubleText">Text recognition needs internet (the first time). If it doesn't work, add
+  rows manually with "+ add row" and fill in the date/time — the FIT file
+  works just as well.</span>
 </details>
 
 <script>
@@ -547,12 +558,144 @@ function buildCardioFit(equipment, intervals, startUnixSec, tzOffsetSec) {
 
 
 /* ====== UI ====== */
-const APP_VERSION = '1.4.0'; // bij elke update ophogen + wijziging bijhouden in CHANGELOG.md (Drive)
+const APP_VERSION = '1.5.0'; // bij elke update ophogen + wijziging bijhouden in CHANGELOG.md (Drive)
 const $ = id => document.getElementById(id);
 const tbl = $('tbl');
 let expectedCount = null;
 
+// ---------- i18n (EN default, DE, NL) ----------
+const I18N = {
+  en: {
+    sub: 'Screenshots of "Training details" → FIT file → Garmin Connect (Strava follows automatically)',
+    step1: 'Choose your eGym screenshots', pick: 'Choose screenshots',
+    step2: 'Check the data', labelDate: 'Date', labelTime: 'Start time',
+    thExercise: 'Exercise', thSets: 'Sets', thReps: 'Reps', thKg: 'kg', thKcal: 'kcal',
+    addRow: '+ add row',
+    garminNote: 'Below each exercise is the Garmin exercise that will be used. Not right? Choose a different one.',
+    settings: 'Settings', activeLabel: 'Seconds per set', restLabel: 'Rest between sets (s)',
+    step3fit: 'FIT file (strength training)', makeFit: 'Create & download FIT file',
+    step3cardio: 'Cardio machines',
+    cardioNote: 'Uses the same date/start time as above. Each machine becomes its own FIT file.',
+    step4: 'Import', garminLink: 'Open Garmin Connect Import',
+    howFurther: "What's next?",
+    howFurtherText: 'On the Garmin page choose "Import Data", select the .fit file you just downloaded (in your Downloads folder) and confirm. If your Garmin-Strava link is active, the activity will appear in Strava automatically.',
+    ocrTroubleSummary: 'Text recognition not working?',
+    ocrTroubleText: 'Text recognition needs internet (the first time). If it doesn\'t work, add rows manually with "+ add row" and fill in the date/time — the FIT file works just as well.',
+    loadingOcr: 'Loading text recognition…', readingShot: 'Reading screenshot {i} of {n}…',
+    recognized: '{bits} recognized.', nothingRecognized: 'Nothing recognized — add manually.',
+    ocrFailed: 'Text recognition failed: {msg} — add rows manually.',
+    bitsExercises: '{n} exercise(s)', bitsCardio: '{n} cardio machine(s)',
+    countWarn: 'Note: the app reports {expected} exercises, but {n} are shown here. Missing a screenshot?',
+    chooseExercise: '— choose Garmin exercise —', exercisePlaceholder: 'Exercise',
+    thIdx: '#', thMin: 'min', thSec: 'sec', thKm: 'km', addInterval: '+ interval',
+    noIntervals: 'No intervals filled in.', fillDateTimeAbove: 'Enter date and start time (above).',
+    fillDateTime: 'Enter date and start time.',
+    rowIncomplete: 'Row "{name}" is incomplete (sets/reps/kg).', noExercises: 'No exercises filled in.',
+    cardioSummary: '{fname} — {min} min, {km} km. In your Downloads.',
+    strengthSummary: '{fname} — {n} exercises, {sets} sets, {min} min, {kcal} kcal. The file is in your Downloads.',
+    noGarminChoice: '{n} exercise(s) without a Garmin choice: these will appear as "unknown exercise".',
+    device_loopband: 'Treadmill', device_fiets: 'Bike', device_crosstrainer: 'Elliptical',
+  },
+  de: {
+    sub: 'Screenshots von „Trainingsdetails" → FIT-Datei → Garmin Connect (Strava folgt automatisch)',
+    step1: 'Wähle deine eGym-Screenshots', pick: 'Screenshots auswählen',
+    step2: 'Daten überprüfen', labelDate: 'Datum', labelTime: 'Startzeit',
+    thExercise: 'Übung', thSets: 'Sätze', thReps: 'Wdh.', thKg: 'kg', thKcal: 'kcal',
+    addRow: '+ Zeile hinzufügen',
+    garminNote: 'Unter jeder Übung steht die verwendete Garmin-Übung. Stimmt sie nicht? Wähle selbst eine andere.',
+    settings: 'Einstellungen', activeLabel: 'Sekunden pro Satz', restLabel: 'Pause zwischen Sätzen (s)',
+    step3fit: 'FIT-Datei (Krafttraining)', makeFit: 'FIT-Datei erstellen & herunterladen',
+    step3cardio: 'Cardio-Geräte',
+    cardioNote: 'Verwendet Datum/Startzeit von oben. Jedes Gerät wird eine eigene FIT-Datei.',
+    step4: 'Importieren', garminLink: 'Garmin Connect Import öffnen',
+    howFurther: 'Wie geht’s weiter?',
+    howFurtherText: 'Wähle auf der Garmin-Seite „Daten importieren", wähle die gerade heruntergeladene .fit-Datei (im Downloads-Ordner) und bestätige. Ist deine Garmin-Strava-Verknüpfung aktiv, erscheint die Aktivität danach automatisch in Strava.',
+    ocrTroubleSummary: 'Texterkennung funktioniert nicht?',
+    ocrTroubleText: 'Texterkennung benötigt (beim ersten Mal) Internet. Klappt es nicht, füge Zeilen manuell hinzu mit „+ Zeile hinzufügen" und trage Datum/Zeit ein — die FIT-Datei funktioniert genauso gut.',
+    loadingOcr: 'Texterkennung wird geladen…', readingShot: 'Screenshot {i} von {n} wird gelesen…',
+    recognized: '{bits} erkannt.', nothingRecognized: 'Nichts erkannt — manuell hinzufügen.',
+    ocrFailed: 'Texterkennung fehlgeschlagen: {msg} — Zeilen manuell hinzufügen.',
+    bitsExercises: '{n} Übung(en)', bitsCardio: '{n} Cardio-Gerät(e)',
+    countWarn: 'Hinweis: Die App meldet {expected} Übungen, hier stehen {n}. Fehlt ein Screenshot?',
+    chooseExercise: '— Garmin-Übung wählen —', exercisePlaceholder: 'Übung',
+    thIdx: '#', thMin: 'Min', thSec: 'Sek', thKm: 'km', addInterval: '+ Intervall',
+    noIntervals: 'Keine Intervalle eingetragen.', fillDateTimeAbove: 'Datum und Startzeit eintragen (oben).',
+    fillDateTime: 'Datum und Startzeit eintragen.',
+    rowIncomplete: 'Zeile "{name}" ist unvollständig (Sätze/Wdh./kg).', noExercises: 'Keine Übungen eingetragen.',
+    cardioSummary: '{fname} — {min} Min, {km} km. Liegt in deinen Downloads.',
+    strengthSummary: '{fname} — {n} Übungen, {sets} Sätze, {min} Min, {kcal} kcal. Die Datei liegt in deinen Downloads.',
+    noGarminChoice: '{n} Übung(en) ohne Garmin-Auswahl: diese erscheinen als „unbekannte Übung".',
+    device_loopband: 'Laufband', device_fiets: 'Fahrrad', device_crosstrainer: 'Crosstrainer',
+  },
+  nl: {
+    sub: 'Screenshots van "Details van de training" → FIT-bestand → Garmin Connect (Strava volgt automatisch)',
+    step1: 'Kies je eGym-screenshots', pick: 'Screenshots kiezen',
+    step2: 'Controleer de gegevens', labelDate: 'Datum', labelTime: 'Aanvangstijd',
+    thExercise: 'Oefening', thSets: 'Sets', thReps: 'Herh.', thKg: 'kg', thKcal: 'kcal',
+    addRow: '+ regel toevoegen',
+    garminNote: 'Onder elke oefening staat de Garmin-oefening die wordt gebruikt. Klopt hij niet? Kies zelf een andere.',
+    settings: 'Instellingen', activeLabel: 'Seconden per set', restLabel: 'Rust tussen sets (s)',
+    step3fit: 'FIT-bestand (krachttraining)', makeFit: 'Maak & download FIT-bestand',
+    step3cardio: 'Cardio-apparaten',
+    cardioNote: 'Gebruikt dezelfde datum/aanvangstijd hierboven. Elk apparaat wordt een eigen FIT-bestand.',
+    step4: 'Importeren', garminLink: 'Open Garmin Connect Import',
+    howFurther: 'Hoe verder?',
+    howFurtherText: 'Kies op de Garmin-pagina "Gegevens importeren", selecteer het zojuist gedownloade .fit-bestand (staat in je Downloads-map) en bevestig. Als je Garmin-Strava-koppeling aanstaat, verschijnt de training daarna automatisch in Strava.',
+    ocrTroubleSummary: 'Werkt de tekstherkenning niet?',
+    ocrTroubleText: 'Tekstherkenning heeft (de eerste keer) internet nodig. Lukt het niet, voeg dan handmatig regels toe met "+ regel toevoegen" en vul datum/tijd in — het FIT-bestand werkt dan net zo goed.',
+    loadingOcr: 'Tekstherkenning laden…', readingShot: 'Screenshot {i} van {n} lezen…',
+    recognized: '{bits} herkend.', nothingRecognized: 'Niets herkend — voeg handmatig toe.',
+    ocrFailed: 'Tekstherkenning mislukt: {msg} — voeg regels handmatig toe.',
+    bitsExercises: '{n} oefening(en)', bitsCardio: '{n} cardio-apparaat(en)',
+    countWarn: 'Let op: de app meldt {expected} oefeningen, hier staan er {n}. Ontbreekt er een screenshot?',
+    chooseExercise: '— kies Garmin-oefening —', exercisePlaceholder: 'Oefening',
+    thIdx: '#', thMin: 'min', thSec: 'sec', thKm: 'km', addInterval: '+ interval',
+    noIntervals: 'Geen intervallen ingevuld.', fillDateTimeAbove: 'Vul datum en aanvangstijd in (boven).',
+    fillDateTime: 'Vul datum en aanvangstijd in.',
+    rowIncomplete: 'Regel "{name}" is niet compleet (sets/herhalingen/kg).', noExercises: 'Geen oefeningen ingevuld.',
+    cardioSummary: '{fname} — {min} min, {km} km. Staat in je Downloads.',
+    strengthSummary: '{fname} — {n} oefeningen, {sets} sets, {min} min, {kcal} kcal. Het bestand staat in je Downloads.',
+    noGarminChoice: '{n} oefening(en) zonder Garmin-keuze: die verschijnen als "onbekende oefening".',
+    device_loopband: 'Loopband', device_fiets: 'Fiets', device_crosstrainer: 'Crosstrainer',
+  },
+};
+let lang = 'en';
+try { const saved = localStorage.getItem('egym_lang'); if (saved && I18N[saved]) lang = saved; } catch (e) {}
+
+function t(key, vars) {
+  let s = (I18N[lang] && I18N[lang][key]) ?? I18N.en[key] ?? key;
+  if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]);
+  return s;
+}
+
+function applyStaticI18n() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+}
+
+function refreshDynamicI18n() {
+  document.querySelectorAll('#tbl .gsel option[value=""]').forEach(o => o.textContent = t('chooseExercise'));
+  document.querySelectorAll('#tbl .nm').forEach(i => i.placeholder = t('exercisePlaceholder'));
+  document.querySelectorAll('.cardioDevice').forEach(box => {
+    const key = box.dataset.device;
+    box.querySelector('h3').textContent = t('device_' + key);
+    const ths = box.querySelectorAll('table.cardioTbl th');
+    if (ths.length === 5) { ths[0].textContent = t('thIdx'); ths[1].textContent = t('thMin'); ths[2].textContent = t('thSec'); ths[3].textContent = t('thKm'); }
+    box.querySelector('.addCiv').textContent = t('addInterval');
+    box.querySelector('.makeCardioFit').textContent = t('makeFit');
+  });
+  checkCount();
+}
+
 $('verTag').textContent = 'v' + APP_VERSION;
+$('langSel').value = lang;
+applyStaticI18n();
+$('langSel').addEventListener('change', () => {
+  lang = $('langSel').value;
+  try { localStorage.setItem('egym_lang', lang); } catch (e) {}
+  applyStaticI18n();
+  refreshDynamicI18n();
+});
 $('pick').addEventListener('click', () => $('files').click());
 $('files').addEventListener('change', e => { if (e.target.files.length) runOcr([...e.target.files]); });
 
@@ -589,12 +732,12 @@ async function upscale(file) {
 
 async function runOcr(fileList) {
   try {
-    setStatus('Tekstherkenning laden…');
+    setStatus(t('loadingOcr'));
     await loadTesseract();
     const worker = await Tesseract.createWorker('eng');
     const texts = [];
     for (let i = 0; i < fileList.length; i++) {
-      setStatus(`Screenshot ${i + 1} van ${fileList.length} lezen…`);
+      setStatus(t('readingShot', { i: i + 1, n: fileList.length }));
       const blob = await upscale(fileList[i]);
       const { data } = await worker.recognize(blob);
       texts.push(data.text);
@@ -606,11 +749,11 @@ async function runOcr(fileList) {
     const nCardio = Object.values(cardioDevices).reduce((a, arr) => a + (arr.length ? 1 : 0), 0);
     showResult(parsed, cardioDevices);
     const bits = [];
-    if (parsed.exercises.length) bits.push(`${parsed.exercises.length} oefening(en)`);
-    if (nCardio) bits.push(`${nCardio} cardio-apparaat(en)`);
-    setStatus(bits.length ? `${bits.join(', ')} herkend.` : 'Niets herkend — voeg handmatig toe.', bits.length > 0);
+    if (parsed.exercises.length) bits.push(t('bitsExercises', { n: parsed.exercises.length }));
+    if (nCardio) bits.push(t('bitsCardio', { n: nCardio }));
+    setStatus(bits.length ? t('recognized', { bits: bits.join(', ') }) : t('nothingRecognized'), bits.length > 0);
   } catch (err) {
-    setStatus('Tekstherkenning mislukt: ' + err.message + ' — voeg regels handmatig toe.');
+    setStatus(t('ocrFailed', { msg: err.message }));
     showResult({ exercises: [], dateInfo: null, expectedCount: null }, { crosstrainer: [], loopband: [], fiets: [] });
   }
 }
@@ -651,14 +794,14 @@ function addCardioDeviceBlock(deviceKey, label, intervals) {
   box.className = 'cardioDevice';
   box.dataset.device = deviceKey;
   box.innerHTML =
-    `<h3>${label}</h3>
+    `<h3>${t('device_' + deviceKey)}</h3>
      <table class="cardioTbl">
-       <thead><tr><th>#</th><th>min</th><th>sec</th><th>km</th><th></th></tr></thead>
+       <thead><tr><th>${t('thIdx')}</th><th>${t('thMin')}</th><th>${t('thSec')}</th><th>${t('thKm')}</th><th></th></tr></thead>
        <tbody></tbody>
      </table>
      <div class="btnrow">
-       <button class="secondary addCiv" style="flex:1">+ interval</button>
-       <button class="makeCardioFit" style="flex:2">Maak &amp; download FIT-bestand</button>
+       <button class="secondary addCiv" style="flex:1">${t('addInterval')}</button>
+       <button class="makeCardioFit" style="flex:2">${t('makeFit')}</button>
      </div>
      <div class="cardioSummary"></div>`;
   const tbody = box.querySelector('tbody');
@@ -689,10 +832,10 @@ function addCardioDeviceBlock(deviceKey, label, intervals) {
         const km = parseFloat((tr.querySelector('.civ-km').value || '0').replace(',', '.')) || 0;
         return { durationSec: min * 60 + sec, km };
       }).filter(iv => iv.durationSec > 0);
-      if (!ivs.length) throw new Error('Geen intervallen ingevuld.');
+      if (!ivs.length) throw new Error(t('noIntervals'));
       const [y, mo, da] = $('dat').value.split('-').map(Number);
       const [hh, mm] = $('tijd').value.split(':').map(Number);
-      if (!y || isNaN(hh)) throw new Error('Vul datum en aanvangstijd in (boven).');
+      if (!y || isNaN(hh)) throw new Error(t('fillDateTimeAbove'));
       const local = new Date(y, mo - 1, da, hh, mm);
       const startUnix = local.getTime() / 1000;
       const tzOffsetSec = -local.getTimezoneOffset() * 60;
@@ -702,7 +845,7 @@ function addCardioDeviceBlock(deviceKey, label, intervals) {
       a.href = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
       a.download = fname;
       document.body.appendChild(a); a.click(); a.remove();
-      summary.innerHTML = `<span class="ok">✓</span> ${fname} — ${Math.round(totalS/60)} min, ${totalKm.toFixed(2)} km. Staat in je Downloads.`;
+      summary.innerHTML = `<span class="ok">✓</span> ` + t('cardioSummary', { fname, min: Math.round(totalS/60), km: totalKm.toFixed(2) });
       $('garminCard').classList.remove('hidden');
     } catch (err) { summary.textContent = err.message; }
   });
@@ -710,7 +853,7 @@ function addCardioDeviceBlock(deviceKey, label, intervals) {
 }
 
 function optionsHtml(selected) {
-  let h = `<option value=""${selected === null ? ' selected' : ''}>— kies Garmin-oefening —</option>`;
+  let h = `<option value=""${selected === null ? ' selected' : ''}>${t('chooseExercise')}</option>`;
   GARMIN_EXERCISES.forEach((g, i) => {
     h += `<option value="${i}"${i === selected ? ' selected' : ''}>${g.label}</option>`;
   });
@@ -723,7 +866,7 @@ function addRow(e = {}) {
   tb.className = 'exrow';
   tb.innerHTML =
     `<tr class="r1">
-       <td><input class="nm" value="${(e.name || '').replace(/"/g,'&quot;')}" placeholder="Oefening"></td>
+       <td><input class="nm" value="${(e.name || '').replace(/"/g,'&quot;')}" placeholder="${t('exercisePlaceholder')}"></td>
        <td class="num"><input inputmode="numeric" value="${e.sets ?? ''}"></td>
        <td class="num"><input inputmode="numeric" value="${e.reps ?? ''}"></td>
        <td class="num"><input inputmode="decimal" value="${e.kg ?? ''}"></td>
@@ -752,7 +895,7 @@ function checkCount() {
   const n = tbl.querySelectorAll('tbody.exrow').length;
   const w = $('countWarn');
   if (expectedCount !== null && n !== expectedCount) {
-    w.textContent = `Let op: de app meldt ${expectedCount} oefeningen, hier staan er ${n}. Ontbreekt er een screenshot?`;
+    w.textContent = t('countWarn', { expected: expectedCount, n });
     w.classList.remove('hidden');
   } else w.classList.add('hidden');
 }
@@ -767,10 +910,10 @@ function readRows() {
     const e = { name, sets: parseInt(sets,10), reps: parseInt(reps,10),
                 kg: parseFloat((kg||'').replace(',', '.')), kcal: parseInt(kcal,10) || 0,
                 garmin: g === '' ? null : parseInt(g,10) };
-    if (!(e.sets > 0) || !(e.reps > 0) || !(e.kg >= 0)) throw new Error(`Regel "${name}" is niet compleet (sets/herhalingen/kg).`);
+    if (!(e.sets > 0) || !(e.reps > 0) || !(e.kg >= 0)) throw new Error(t('rowIncomplete', { name }));
     out.push(e);
   }
-  if (!out.length) throw new Error('Geen oefeningen ingevuld.');
+  if (!out.length) throw new Error(t('noExercises'));
   return out;
 }
 
@@ -779,7 +922,7 @@ $('makeFit').addEventListener('click', () => {
     const ex = readRows();
     const [y, mo, da] = $('dat').value.split('-').map(Number);
     const [hh, mm] = $('tijd').value.split(':').map(Number);
-    if (!y || isNaN(hh)) throw new Error('Vul datum en aanvangstijd in.');
+    if (!y || isNaN(hh)) throw new Error(t('fillDateTime'));
     const local = new Date(y, mo - 1, da, hh, mm);
     const startUnix = local.getTime() / 1000;
     const tzOffsetSec = -local.getTimezoneOffset() * 60;
@@ -791,9 +934,9 @@ $('makeFit').addEventListener('click', () => {
     a.download = fname;
     document.body.appendChild(a); a.click(); a.remove();
     const zonder = ex.filter(e => e.garmin === null).length;
-    $('summary').innerHTML = `<span class="ok">✓</span> ${fname} — ${ex.length} oefeningen, ${nSets} sets, ` +
-      `${Math.round(totalS/60)} min, ${totalKcal} kcal. Het bestand staat in je Downloads.` +
-      (zonder ? `<br><span class="warnline">${zonder} oefening(en) zonder Garmin-keuze: die verschijnen als "onbekende oefening".</span>` : '');
+    $('summary').innerHTML = `<span class="ok">✓</span> ` +
+      t('strengthSummary', { fname, n: ex.length, sets: nSets, min: Math.round(totalS/60), kcal: totalKcal }) +
+      (zonder ? `<br><span class="warnline">${t('noGarminChoice', { n: zonder })}</span>` : '');
     $('garminCard').classList.remove('hidden');
   } catch (err) { $('summary').textContent = err.message; }
 });
