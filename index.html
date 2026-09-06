@@ -78,13 +78,30 @@
   .cardioDevice .btnrow { display:flex; gap:8px; margin-top:8px; }
   .cardioDevice .btnrow button { padding:8px; }
   .cardioSummary { font-size:.9rem; margin-top:6px; color:var(--muted); }
+  .tagline { color:var(--ink); font-size:.95rem; font-weight:600; margin:2px 0 6px; }
+  .learnMore { color:var(--accent2); font-size:.78rem; text-decoration:none; font-weight:700;
+    text-transform:uppercase; letter-spacing:.03em; }
+  .learnMore:hover { text-decoration:underline; }
+  .sectionTitle { font-weight:700; margin-bottom:10px; text-transform:uppercase; font-size:.8rem;
+    letter-spacing:.06em; color:var(--muted); }
+  .qrWrap { background:#fff; border-radius:10px; padding:10px; display:inline-block; margin-bottom:12px; line-height:0; }
+  .qrWrap img { display:block; width:140px; height:140px; }
+  .shareLink { display:flex; gap:8px; }
+  .shareLink input { flex:1; min-width:0; border:1px solid var(--line); border-radius:8px; padding:8px 10px;
+    background:var(--card2); color:var(--muted); font-size:.78rem; }
+  .inlineBtn { width:auto; flex:none; }
+  .stars { font-size:1.7rem; letter-spacing:6px; margin-bottom:10px; cursor:pointer; color:var(--line); }
+  .stars span.filled { color:var(--accent2); }
+  textarea#feedbackText { width:100%; border:1px solid var(--line); border-radius:8px; padding:10px;
+    background:var(--card2); color:var(--ink); font:inherit; resize:vertical; }
 </style>
 </head>
 <body>
 <div class="topbar">
   <div>
     <h1>eGym → Garmin</h1>
-    <div class="sub" data-i18n="sub">Screenshots of "Training details" → FIT file → Garmin Connect (Strava follows automatically)</div>
+    <div class="tagline" data-i18n="tagline">Your eGym workouts, straight into Garmin.</div>
+    <a class="learnMore" href="https://github.com/Tuguntke/egym2garmin#readme" target="_blank" rel="noopener" data-i18n="learnMore">How it works →</a>
   </div>
   <div class="topRight">
     <select id="langSel" class="langSel">
@@ -154,6 +171,27 @@
   rows manually with "+ add row" and fill in the date/time — the FIT file
   works just as well.</span>
 </details>
+
+<div class="card" id="shareCard" style="margin-top:14px">
+  <div class="sectionTitle" data-i18n="shareTitle">Share this app</div>
+  <div style="font-size:.85rem;color:var(--muted);margin-bottom:12px" data-i18n="shareCta">Know someone who trains with eGym? Share the app — scan the code or send the link.</div>
+  <div class="qrWrap"><img src="data:image/png;base64,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" alt="QR code"></div>
+  <div class="shareLink">
+    <input type="text" id="shareUrl" value="https://tuguntke.github.io/egym2garmin/" readonly onclick="this.select()">
+    <button class="secondary inlineBtn" id="copyLinkBtn" data-i18n="copyLink" style="padding:8px">Copy link</button>
+  </div>
+</div>
+
+<div class="card" id="feedbackCard">
+  <div class="sectionTitle" data-i18n="feedbackTitle">Feedback</div>
+  <div style="font-size:.85rem;color:var(--muted);margin-bottom:10px" data-i18n="feedbackIntro">How's it working for you? Ideas for new features are welcome too.</div>
+  <div class="stars" id="stars">
+    <span data-star="1">★</span><span data-star="2">★</span><span data-star="3">★</span><span data-star="4">★</span><span data-star="5">★</span>
+  </div>
+  <textarea id="feedbackText" rows="3" data-i18n-ph="feedbackPlaceholder" placeholder="Your feedback or ideas…"></textarea>
+  <button id="sendFeedback" data-i18n="feedbackSend" style="margin-top:10px">Send feedback</button>
+  <button class="secondary inlineBtn" id="copyInfoBtn" data-i18n="feedbackCopyInfo" style="margin-top:8px;padding:8px">Copy app info (for bug reports)</button>
+</div>
 
 <script>
 /* ====== kernlogica (geverifieerd tegen het officiële Garmin FIT-profiel) ====== */
@@ -558,7 +596,7 @@ function buildCardioFit(equipment, intervals, startUnixSec, tzOffsetSec) {
 
 
 /* ====== UI ====== */
-const APP_VERSION = '1.5.0'; // bij elke update ophogen + wijziging bijhouden in CHANGELOG.md (Drive)
+const APP_VERSION = '1.6.0'; // bij elke update ophogen + wijziging bijhouden in CHANGELOG.md (Drive)
 const $ = id => document.getElementById(id);
 const tbl = $('tbl');
 let expectedCount = null;
@@ -566,7 +604,7 @@ let expectedCount = null;
 // ---------- i18n (EN default, DE, NL) ----------
 const I18N = {
   en: {
-    sub: 'Screenshots of "Training details" → FIT file → Garmin Connect (Strava follows automatically)',
+    tagline: 'Your eGym workouts, straight into Garmin.', learnMore: 'How it works →',
     step1: 'Choose your eGym screenshots', pick: 'Choose screenshots',
     step2: 'Check the data', labelDate: 'Date', labelTime: 'Start time',
     thExercise: 'Exercise', thSets: 'Sets', thReps: 'Reps', thKg: 'kg', thKcal: 'kcal',
@@ -595,9 +633,17 @@ const I18N = {
     strengthSummary: '{fname} — {n} exercises, {sets} sets, {min} min, {kcal} kcal. The file is in your Downloads.',
     noGarminChoice: '{n} exercise(s) without a Garmin choice: these will appear as "unknown exercise".',
     device_loopband: 'Treadmill', device_fiets: 'Bike', device_crosstrainer: 'Elliptical',
+    shareTitle: 'Share this app',
+    shareCta: 'Know someone who trains with eGym? Share the app — scan the code or send the link.',
+    copyLink: 'Copy link', copyLinkDone: 'Link copied!',
+    feedbackTitle: 'Feedback',
+    feedbackIntro: "How's it working for you? Ideas for new features are welcome too.",
+    feedbackPlaceholder: 'Your feedback or ideas…', feedbackSend: 'Send feedback',
+    feedbackCopyInfo: 'Copy app info (for bug reports)', feedbackCopyInfoDone: 'Copied!',
+    feedbackSubject: 'eGym→Garmin feedback (v{version})', feedbackNoMessage: '(no message)',
   },
   de: {
-    sub: 'Screenshots von „Trainingsdetails" → FIT-Datei → Garmin Connect (Strava folgt automatisch)',
+    tagline: 'Deine eGym-Workouts, direkt in Garmin.', learnMore: 'So funktioniert\'s →',
     step1: 'Wähle deine eGym-Screenshots', pick: 'Screenshots auswählen',
     step2: 'Daten überprüfen', labelDate: 'Datum', labelTime: 'Startzeit',
     thExercise: 'Übung', thSets: 'Sätze', thReps: 'Wdh.', thKg: 'kg', thKcal: 'kcal',
@@ -626,9 +672,17 @@ const I18N = {
     strengthSummary: '{fname} — {n} Übungen, {sets} Sätze, {min} Min, {kcal} kcal. Die Datei liegt in deinen Downloads.',
     noGarminChoice: '{n} Übung(en) ohne Garmin-Auswahl: diese erscheinen als „unbekannte Übung".',
     device_loopband: 'Laufband', device_fiets: 'Fahrrad', device_crosstrainer: 'Crosstrainer',
+    shareTitle: 'App teilen',
+    shareCta: 'Kennst du jemanden, der mit eGym trainiert? Teile die App — Code scannen oder Link senden.',
+    copyLink: 'Link kopieren', copyLinkDone: 'Link kopiert!',
+    feedbackTitle: 'Feedback',
+    feedbackIntro: 'Wie läuft\'s für dich? Ideen für neue Funktionen sind auch willkommen.',
+    feedbackPlaceholder: 'Dein Feedback oder deine Ideen…', feedbackSend: 'Feedback senden',
+    feedbackCopyInfo: 'App-Infos kopieren (für Fehlermeldungen)', feedbackCopyInfoDone: 'Kopiert!',
+    feedbackSubject: 'eGym→Garmin Feedback (v{version})', feedbackNoMessage: '(keine Nachricht)',
   },
   nl: {
-    sub: 'Screenshots van "Details van de training" → FIT-bestand → Garmin Connect (Strava volgt automatisch)',
+    tagline: 'Jouw eGym-trainingen, direct in Garmin.', learnMore: 'Zo werkt het →',
     step1: 'Kies je eGym-screenshots', pick: 'Screenshots kiezen',
     step2: 'Controleer de gegevens', labelDate: 'Datum', labelTime: 'Aanvangstijd',
     thExercise: 'Oefening', thSets: 'Sets', thReps: 'Herh.', thKg: 'kg', thKcal: 'kcal',
@@ -657,6 +711,14 @@ const I18N = {
     strengthSummary: '{fname} — {n} oefeningen, {sets} sets, {min} min, {kcal} kcal. Het bestand staat in je Downloads.',
     noGarminChoice: '{n} oefening(en) zonder Garmin-keuze: die verschijnen als "onbekende oefening".',
     device_loopband: 'Loopband', device_fiets: 'Fiets', device_crosstrainer: 'Crosstrainer',
+    shareTitle: 'Deel deze app',
+    shareCta: 'Ken je iemand die met eGym traint? Deel de app — scan de code of stuur de link.',
+    copyLink: 'Link kopiëren', copyLinkDone: 'Link gekopieerd!',
+    feedbackTitle: 'Feedback',
+    feedbackIntro: 'Hoe bevalt de app? Tips voor nieuwe features zijn ook welkom.',
+    feedbackPlaceholder: 'Je feedback of ideeën…', feedbackSend: 'Feedback versturen',
+    feedbackCopyInfo: 'App-info kopiëren (voor bugmeldingen)', feedbackCopyInfoDone: 'Gekopieerd!',
+    feedbackSubject: 'eGym→Garmin feedback (v{version})', feedbackNoMessage: '(geen bericht)',
   },
 };
 let lang = 'en';
@@ -671,6 +733,7 @@ function t(key, vars) {
 function applyStaticI18n() {
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
 }
 
 function refreshDynamicI18n() {
@@ -939,6 +1002,47 @@ $('makeFit').addEventListener('click', () => {
       (zonder ? `<br><span class="warnline">${t('noGarminChoice', { n: zonder })}</span>` : '');
     $('garminCard').classList.remove('hidden');
   } catch (err) { $('summary').textContent = err.message; }
+});
+
+// ---------- share (copy link) ----------
+$('copyLinkBtn').addEventListener('click', async () => {
+  const btn = $('copyLinkBtn');
+  try { await navigator.clipboard.writeText($('shareUrl').value); }
+  catch (e) { $('shareUrl').select(); try { document.execCommand('copy'); } catch (e2) {} }
+  btn.textContent = t('copyLinkDone');
+  setTimeout(() => { btn.textContent = t('copyLink'); }, 1800);
+});
+
+// ---------- feedback ----------
+const FEEDBACK_TO = ['mtuguntke', 'gmail.com'].join('@'); // lichte obfuscatie tegen scrapers in de publieke repo
+let rating = 0;
+const starEls = [...document.querySelectorAll('#stars span')];
+starEls.forEach(s => s.addEventListener('click', () => {
+  rating = +s.dataset.star;
+  starEls.forEach(x => x.classList.toggle('filled', +x.dataset.star <= rating));
+}));
+
+$('sendFeedback').addEventListener('click', () => {
+  const msg = $('feedbackText').value.trim();
+  const subject = t('feedbackSubject', { version: APP_VERSION });
+  const lines = [];
+  if (rating) lines.push(`Rating: ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)} (${rating}/5)`);
+  lines.push('');
+  lines.push(msg || t('feedbackNoMessage'));
+  window.location.href = `mailto:${FEEDBACK_TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
+});
+
+$('copyInfoBtn').addEventListener('click', async () => {
+  const info = [
+    `eGym→Garmin v${APP_VERSION}`,
+    `Language: ${lang}`,
+    `Installed (standalone): ${window.matchMedia('(display-mode: standalone)').matches}`,
+    `User agent: ${navigator.userAgent}`,
+  ].join('\n');
+  try { await navigator.clipboard.writeText(info); } catch (e) {}
+  const btn = $('copyInfoBtn');
+  btn.textContent = t('feedbackCopyInfoDone');
+  setTimeout(() => { btn.textContent = t('feedbackCopyInfo'); }, 1800);
 });
 
 if ('serviceWorker' in navigator) {
