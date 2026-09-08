@@ -24,8 +24,8 @@ The whole thing runs as a single static HTML page. There is no backend, no login
 - **Optional auto-download**: turn on "Auto-download when everything is recognized with confidence" under Settings and the app downloads the FIT file(s) — and opens Garmin Connect import — on its own as soon as every row is confident and the date/time are filled in. Off by default; anything uncertain still needs a manual check first.
 - **Installable PWA**: works fully offline after first use (add it to your home screen on Android or iPhone) and shows a small version tag so you always know which build you're on.
 - **Multilingual**: English (default), German and Dutch, switchable from the top-right corner at any time — even after screenshots have already been processed. Your choice is remembered on the device.
-- **Share it**: tap "Share this app →" at the top to reveal a QR code and a copyable link to the live app, so you can hand it to another eGym user in seconds.
-- **Feedback built in**: a star rating and a comment box let testers send feedback or feature ideas straight to the maintainer by email — no separate form or account needed. A "copy app info" button adds version/browser details for bug reports.
+- **Share it**: once you've downloaded a FIT file, a QR code and a copyable link to the live app appear on that success screen, so you can hand it to another eGym user in seconds.
+- **Feedback built in**: after a successful download, a star rating and a comment box let testers send feedback or feature ideas straight to the maintainer by email — no separate form or account needed. A "copy app info" button adds version/browser details for bug reports.
 
 ## Installing on your phone
 
@@ -40,19 +40,19 @@ Once installed it opens full-screen like a regular app and keeps working without
 ## Using it after a workout
 
 1. In the eGym app, open your finished training and screenshot the exercise list (scroll and take multiple screenshots if needed — overlapping shots are fine, duplicates are removed automatically). Make sure the exercise count header and the date/time appear on at least one screenshot.
-2. Open the eGym → Garmin app and tap **Choose screenshots**, selecting all screenshots from that session.
-3. Check the recognized table. Date and start time are read from the screenshot but can be edited. Rows the app is confident about are shown compact with a checkmark — tap one if the matched Garmin exercise is wrong. Anything uncertain is shown open with a dropdown to pick from.
+2. Open the eGym → Garmin app and tap the upload area (or drag your screenshots onto it) to select all screenshots from that session. Tap the "?" icon top-right any time for a quick 3-step reminder of how the app works.
+3. Check the recognized table. Date and start time are read from the screenshot but can be edited. Rows the app is confident about are shown compact with a checkmark — tap one if the matched Garmin exercise is wrong. Anything uncertain is shown open with a dropdown to pick from. If nothing was recognized, a "text recognition not working?" tip appears automatically.
 4. Tap **Create & download FIT file** (once for strength training; for cardio, use **Download all cardio FIT files** if more than one machine was found, or the per-machine button otherwise). The Garmin Connect import page opens automatically in a new tab. Turned on auto-download in Settings? Then this step happens by itself once everything looks confident.
 5. In that tab, choose "Import Data" and select the `.fit` file you just downloaded. Didn't get a new tab? Use the **Open Garmin Connect Import** button.
 6. Done — if Garmin and Strava are linked, the activity syncs to Strava automatically.
 
 ## Sharing it with others
 
-Tap **Share this app →** at the top of the app to reveal a QR code pointing at the live app link, plus the link itself with a "Copy link" button. Show the QR code to a fellow eGym user, or send them the link directly.
+Once you've downloaded a FIT file, a **Share this app** card appears below the import step with a QR code pointing at the live app link, plus the link itself with a "Copy link" button. Show the QR code to a fellow eGym user, or send them the link directly.
 
 ## Feedback
 
-At the bottom of the app there's a **Feedback** card: rate the app 1–5 stars and/or write a comment or feature idea, then tap **Send feedback** — it opens a pre-filled email to the maintainer, nothing is collected automatically. If you're reporting a bug, tap **Copy app info** first and paste it into the email so the version, browser and language are included.
+That same success screen also shows a **Feedback** card: rate the app 1–5 stars and/or write a comment or feature idea, then tap **Send feedback** — it opens a pre-filled email to the maintainer, nothing is collected automatically. If you're reporting a bug, tap **Copy app info** first and paste it into the email so the version, browser and language are included.
 
 ## Notes and limitations
 

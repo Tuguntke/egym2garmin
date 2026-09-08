@@ -24,8 +24,8 @@ Das Ganze läuft als eine einzige statische HTML-Seite. Es gibt kein Backend, ke
 - **Optionales Auto-Download**: "Automatisch herunterladen, wenn alles sicher erkannt wurde" unter Einstellungen aktivieren, und die App lädt die FIT-Datei(en) — inklusive Öffnen des Garmin-Connect-Imports — von selbst herunter, sobald jede Zeile sicher ist und Datum/Zeit eingetragen sind. Standardmäßig aus; ist etwas unsicher, muss weiterhin erst manuell geprüft werden.
 - **Installierbare PWA**: funktioniert nach dem ersten Gebrauch vollständig offline (zum Startbildschirm auf Android oder iPhone hinzufügen) und zeigt eine kleine Versionsnummer, damit du immer weißt, welcher Stand aktiv ist.
 - **Mehrsprachig**: Englisch (Standard), Deutsch und Niederländisch, jederzeit oben rechts umschaltbar — auch nachdem Screenshots bereits verarbeitet wurden. Die Wahl wird auf dem Gerät gespeichert.
-- **Teilen**: Tippe oben auf "App teilen →", um einen QR-Code und einen kopierbaren Link zur Live-App einzublenden, damit du sie anderen eGym-Nutzern in Sekunden weitergeben kannst.
-- **Eingebautes Feedback**: eine Sternebewertung und ein Kommentarfeld erlauben es Testern, Feedback oder Feature-Ideen direkt per E-Mail an den Betreuer zu senden — ohne separates Formular oder Konto. Ein "App-Infos kopieren"-Button fügt Versions-/Browserdetails für Fehlermeldungen hinzu.
+- **Teilen**: Sobald du eine FIT-Datei heruntergeladen hast, erscheinen auf diesem Erfolgsbildschirm ein QR-Code und ein kopierbarer Link zur Live-App, damit du sie anderen eGym-Nutzern in Sekunden weitergeben kannst.
+- **Eingebautes Feedback**: nach einem erfolgreichen Download erlauben eine Sternebewertung und ein Kommentarfeld es Testern, Feedback oder Feature-Ideen direkt per E-Mail an den Betreuer zu senden — ohne separates Formular oder Konto. Ein "App-Infos kopieren"-Button fügt Versions-/Browserdetails für Fehlermeldungen hinzu.
 
 ## Installation auf dem Handy
 
@@ -40,19 +40,19 @@ Nach der Installation öffnet sie sich vollbildschirm wie eine normale App und f
 ## Nutzung nach einem Training
 
 1. Öffne in der eGym-App dein abgeschlossenes Training und mache Screenshots der Übungsliste (bei Bedarf scrollen und mehrere Screenshots machen — Überlappungen sind kein Problem, Duplikate werden automatisch entfernt). Achte darauf, dass die Kopfzeile mit "X Übungen" und Datum/Zeit auf mindestens einem Screenshot zu sehen sind.
-2. Öffne die eGym → Garmin App und tippe auf **Screenshots auswählen**, um alle Screenshots dieser Session auszuwählen.
-3. Überprüfe die erkannte Tabelle. Datum und Startzeit werden aus dem Screenshot gelesen, lassen sich aber bearbeiten. Zeilen, bei denen sich die App sicher ist, werden kompakt mit einem Häkchen angezeigt — antippen, wenn die zugeordnete Garmin-Übung nicht stimmt. Unsichere Zeilen bleiben offen mit Dropdown zur Auswahl.
+2. Öffne die eGym → Garmin App und tippe auf das Upload-Feld (oder ziehe deine Screenshots hinein), um alle Screenshots dieser Session auszuwählen. Das "?"-Symbol oben rechts zeigt jederzeit eine kurze 3-Schritte-Erinnerung, wie die App funktioniert.
+3. Überprüfe die erkannte Tabelle. Datum und Startzeit werden aus dem Screenshot gelesen, lassen sich aber bearbeiten. Zeilen, bei denen sich die App sicher ist, werden kompakt mit einem Häkchen angezeigt — antippen, wenn die zugeordnete Garmin-Übung nicht stimmt. Unsichere Zeilen bleiben offen mit Dropdown zur Auswahl. Wurde nichts erkannt, erscheint automatisch ein Hinweis "Texterkennung funktioniert nicht?".
 4. Tippe auf **FIT-Datei erstellen & herunterladen** (einmal für Krafttraining; bei Cardio nutze **Alle Cardio-FIT-Dateien herunterladen**, wenn mehrere Geräte gefunden wurden, sonst den Button je Gerät). Die Garmin-Connect-Importseite öffnet sich dabei automatisch in einem neuen Tab. Ist Auto-Download in den Einstellungen aktiviert, passiert dieser Schritt von selbst, sobald alles sicher erkannt wurde.
 5. Wähle dort "Daten importieren" und die gerade heruntergeladene `.fit`-Datei aus. Kein neuer Tab erschienen? Nutze den Button **Garmin Connect Import öffnen**.
 6. Fertig — sind Garmin und Strava verknüpft, synchronisiert sich die Aktivität automatisch mit Strava.
 
 ## Mit anderen teilen
 
-Tippe oben in der App auf **App teilen →**, um einen QR-Code einzublenden, der auf den Live-App-Link zeigt, sowie den Link selbst mit einem "Link kopieren"-Button. Zeige den QR-Code einem eGym-Nutzer, oder schicke ihm den Link direkt.
+Sobald du eine FIT-Datei heruntergeladen hast, erscheint unter dem Import-Schritt eine Karte **App teilen** mit einem QR-Code, der auf den Live-App-Link zeigt, sowie dem Link selbst mit einem "Link kopieren"-Button. Zeige den QR-Code einem eGym-Nutzer, oder schicke ihm den Link direkt.
 
 ## Feedback
 
-Ganz unten in der App gibt es eine **Feedback**-Karte: bewerte die App mit 1–5 Sternen und/oder schreibe einen Kommentar oder eine Feature-Idee, dann tippe auf **Feedback senden** — es öffnet sich eine vorausgefüllte E-Mail an den Betreuer, es wird nichts automatisch gesammelt. Meldest du einen Fehler, tippe zuerst auf **App-Infos kopieren** und füge das in die E-Mail ein, damit Version, Browser und Sprache enthalten sind.
+Auf demselben Erfolgsbildschirm gibt es außerdem eine **Feedback**-Karte: bewerte die App mit 1–5 Sternen und/oder schreibe einen Kommentar oder eine Feature-Idee, dann tippe auf **Feedback senden** — es öffnet sich eine vorausgefüllte E-Mail an den Betreuer, es wird nichts automatisch gesammelt. Meldest du einen Fehler, tippe zuerst auf **App-Infos kopieren** und füge das in die E-Mail ein, damit Version, Browser und Sprache enthalten sind.
 
 ## Hinweise und Einschränkungen
 

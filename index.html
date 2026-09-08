@@ -12,27 +12,36 @@
   /* Donker, strak thema — geïnspireerd op de huisstijl van Healthclub Heijenoord
      (zwart/antraciet, hoog contrast, hoofdletter-koppen, ingetogen groene accent). */
   :root { color-scheme: dark;
-    --bg:#0b0c0d; --card:#151718; --card2:#1c1f21; --ink:#f2f3f2; --muted:#9aa0a3; --line:#2a2d2f;
+    --bg:#0b0c0d; --card:#151718; --card2:#1c1f21; --ink:#f2f3f2; --muted:#9CA3AF; --line:#2a2d2f;
     --accent:#1f8f6f; --accent2:#2bb388; --accent-ink:#08120e; --warn:#e2a13a; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { margin:0; background:var(--bg); color:var(--ink);
     font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; padding:16px; }
   .topbar { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:4px; }
-  h1 { font-size:1.15rem; margin:0 0 2px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
-  .verTag { flex:none; font-size:.66rem; color:var(--muted); border:1px solid var(--line); border-radius:999px;
-    padding:3px 9px; letter-spacing:.03em; white-space:nowrap; margin-top:2px; }
-  .topRight { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex:none; }
+  .brand { display:flex; flex-direction:column; gap:2px; }
+  .logos { display:flex; align-items:center; gap:8px; }
+  .logoEgym { font-weight:800; font-size:1.05rem; letter-spacing:.04em; color:var(--ink); }
+  .logoArrow { color:var(--accent2); font-weight:700; font-size:1rem; }
+  .logoGarmin { font-weight:700; font-size:1.05rem; color:var(--ink); }
+  .verTag { flex:none; font-size:.62rem; color:var(--muted); opacity:.7; letter-spacing:.02em;
+    white-space:nowrap; margin-top:4px; }
+  .topRight { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex:none; }
+  .topRightRow { display:flex; align-items:center; gap:6px; }
   .langSel { flex:none; font-size:.66rem; font-weight:700; color:var(--ink); background:var(--card2);
     border:1px solid var(--line); border-radius:999px; padding:3px 9px; letter-spacing:.03em;
     -webkit-appearance:none; appearance:none; cursor:pointer; }
+  .helpBtn { flex:none; width:26px; height:26px; border-radius:50%; border:1px solid var(--line);
+    background:var(--card2); color:var(--muted); font-size:.78rem; font-weight:700; cursor:pointer;
+    padding:0; display:flex; align-items:center; justify-content:center; }
+  .helpBtn:hover { color:var(--ink); border-color:var(--accent2); }
   .sub { color:var(--muted); font-size:.85rem; margin-bottom:18px; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:14px; }
   .step { display:flex; align-items:center; gap:9px; font-weight:700; margin-bottom:12px;
-    text-transform:uppercase; font-size:.8rem; letter-spacing:.06em; color:var(--muted); }
+    font-size:.85rem; letter-spacing:normal; color:var(--muted); }
   .step .n { background:var(--accent); color:var(--accent-ink); width:22px; height:22px; border-radius:50%;
     display:inline-flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:800; flex:none; }
-  button, .btn { appearance:none; border:0; border-radius:8px; padding:14px 18px; font-size:.92rem; font-weight:700;
-    text-transform:uppercase; letter-spacing:.03em; background:var(--accent); color:var(--accent-ink);
+  button, .btn { appearance:none; border:0; border-radius:8px; padding:14px 18px; font-size:.95rem; font-weight:600;
+    background:var(--accent); color:var(--accent-ink);
     width:100%; cursor:pointer; display:block; text-align:center; text-decoration:none; transition:background .15s; }
   button:hover, .btn:hover { background:var(--accent2); }
   button.secondary { background:transparent; color:var(--accent2); border:1.5px solid var(--accent); }
@@ -40,8 +49,7 @@
   button:disabled { opacity:.4; }
   #status { font-size:.9rem; color:var(--muted); margin-top:10px; min-height:1.2em; }
   table { width:100%; border-collapse:collapse; font-size:.92rem; }
-  th { text-align:left; color:var(--muted); font-weight:700; font-size:.72rem; padding:4px 4px;
-    text-transform:uppercase; letter-spacing:.03em; }
+  th { text-align:left; color:var(--muted); font-weight:700; font-size:.76rem; padding:4px 4px; }
   td { padding:3px 2px; border-top:1px solid var(--line); }
   td input { width:100%; border:0; background:transparent; color:var(--ink); font:inherit; padding:6px 4px; }
   td.num input { width:3.2em; text-align:right; }
@@ -59,8 +67,7 @@
   tbody.exrow { border-top:1px solid var(--line); }
   tbody.exrow .r1 td { border-top:0; }
   tr.r2 td { border-top:0; padding:0 2px 8px; }
-  .garmlabel { font-size:.72rem; color:var(--muted); text-transform:uppercase;
-    letter-spacing:.04em; margin-right:6px; }
+  .garmlabel { font-size:.72rem; color:var(--muted); margin-right:6px; }
   select.gsel { font:inherit; font-size:.88rem; color:var(--ink); background:var(--card2);
     border:1px solid var(--line); border-radius:8px; padding:5px 6px; max-width:65%; }
   select.gsel.unset { border-color:var(--warn); color:var(--warn); }
@@ -69,8 +76,7 @@
   .cardioDevice:first-child { border-top:0; margin-top:0; padding-top:0; }
   .cardioDevice h3 { margin:0 0 8px; font-size:.85rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink); }
   table.cardioTbl { width:100%; border-collapse:collapse; font-size:.9rem; }
-  table.cardioTbl th { text-align:left; color:var(--muted); font-weight:700; font-size:.7rem; padding:4px 2px;
-    text-transform:uppercase; letter-spacing:.03em; }
+  table.cardioTbl th { text-align:left; color:var(--muted); font-weight:700; font-size:.74rem; padding:4px 2px; }
   table.cardioTbl td { padding:3px 2px; border-top:1px solid var(--line); }
   table.cardioTbl td.num input { width:100%; border:0; background:transparent; color:var(--ink); font:inherit; padding:6px 2px; text-align:right; }
   table.cardioTbl td.idx { color:var(--muted); }
@@ -78,12 +84,10 @@
   .cardioDevice .btnrow { display:flex; gap:8px; margin-top:8px; }
   .cardioDevice .btnrow button { padding:8px; }
   .cardioSummary { font-size:.9rem; margin-top:6px; color:var(--muted); }
-  .tagline { color:var(--ink); font-size:.95rem; font-weight:600; margin:2px 0 6px; }
-  .learnMore { color:var(--accent2); font-size:.78rem; text-decoration:none; font-weight:700;
-    text-transform:uppercase; letter-spacing:.03em; }
+  .tagline { color:var(--muted); font-size:.82rem; font-weight:500; margin:2px 0 6px; }
+  .learnMore { color:var(--accent2); font-size:.82rem; text-decoration:none; font-weight:600; }
   .learnMore:hover { text-decoration:underline; }
-  .sectionTitle { font-weight:700; margin-bottom:10px; text-transform:uppercase; font-size:.8rem;
-    letter-spacing:.06em; color:var(--muted); }
+  .sectionTitle { font-weight:700; margin-bottom:10px; font-size:.9rem; color:var(--muted); }
   .qrWrap { background:#fff; border-radius:10px; padding:10px; display:inline-block; margin-bottom:12px; line-height:0; }
   .qrWrap img { display:block; width:140px; height:140px; }
   .shareLink { display:flex; gap:8px; }
@@ -99,31 +103,81 @@
   .exrow.confirmed .r2.compact { display:table-row; }
   .confirmChip { color:var(--accent2); font-weight:700; font-size:.85rem; cursor:pointer; }
   .confirmChip .tapToEditHint { color:var(--muted); font-weight:400; font-size:.72rem; margin-left:6px; }
+  .dropzone { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    width:100%; box-sizing:border-box; border:1.5px dashed var(--line); border-radius:12px; padding:36px 20px;
+    cursor:pointer; color:var(--muted); text-align:center; transition:border-color .15s, background .15s; }
+  .dropzone:hover, .dropzone.dragover { border-color:var(--accent2); background:var(--card2); }
+  .dropIcon { width:34px; height:34px; color:var(--accent2); }
+  .dropText { font-size:.92rem; color:var(--ink); font-weight:500; }
+  .modalOverlay { position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex;
+    align-items:flex-end; justify-content:center; z-index:50; }
+  .modalSheet { background:var(--card); border:1px solid var(--line); border-radius:16px 16px 0 0;
+    padding:20px; width:100%; max-width:480px; max-height:80vh; overflow:auto; box-sizing:border-box; }
+  @media (min-width:560px) {
+    .modalOverlay { align-items:center; }
+    .modalSheet { border-radius:16px; }
+  }
+  .modalHeader { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;
+    font-weight:700; font-size:.95rem; color:var(--ink); }
+  .modalClose { background:none; border:0; color:var(--muted); font-size:1.1rem; cursor:pointer;
+    width:auto; padding:4px; }
+  .howItWorksList { margin:0 0 14px; padding-left:20px; color:var(--ink); font-size:.9rem; line-height:1.6; }
+  .howItWorksList li { margin-bottom:8px; }
 </style>
 </head>
 <body>
 <div class="topbar">
-  <div>
-    <h1>eGym → Garmin</h1>
+  <div class="brand">
+    <div class="logos">
+      <span class="logoEgym">EGYM</span>
+      <span class="logoArrow">→</span>
+      <span class="logoGarmin">Garmin</span>
+    </div>
     <div class="tagline" data-i18n="tagline">Your eGym workouts, straight into Garmin.</div>
-    <a class="learnMore" href="https://github.com/Tuguntke/egym2garmin#readme" target="_blank" rel="noopener" data-i18n="learnMore">How it works →</a>
-    <a class="learnMore" id="shareToggle" href="#" style="display:block;margin-top:2px" data-i18n="shareToggleShow">Share this app →</a>
   </div>
   <div class="topRight">
-    <select id="langSel" class="langSel">
-      <option value="en">EN</option>
-      <option value="de">DE</option>
-      <option value="nl">NL</option>
-    </select>
+    <div class="topRightRow">
+      <select id="langSel" class="langSel">
+        <option value="en">EN</option>
+        <option value="de">DE</option>
+        <option value="nl">NL</option>
+      </select>
+      <button type="button" class="helpBtn" id="helpBtn" aria-label="Help">?</button>
+    </div>
     <span class="verTag" id="verTag"></span>
   </div>
 </div>
 
 <div class="card">
-  <div class="step"><span class="n">1</span> <span data-i18n="step1">Choose your eGym screenshots</span></div>
+  <label class="dropzone" for="files" id="dropzone">
+    <svg class="dropIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+    </svg>
+    <span class="dropText" data-i18n="dropText">Tap to upload eGym screenshots, or drag them here</span>
+  </label>
   <input type="file" id="files" accept="image/*" multiple class="hidden">
-  <button id="pick" data-i18n="pick">Choose screenshots</button>
   <div id="status"></div>
+</div>
+
+<details class="hidden" id="ocrTrouble" style="margin-top:4px"><summary data-i18n="ocrTroubleSummary">Text recognition not working?</summary>
+  <span data-i18n="ocrTroubleText">Text recognition needs internet (the first time). If it doesn't work, add
+  rows manually with "+ add row" and fill in the date/time — the FIT file
+  works just as well.</span>
+</details>
+
+<div class="modalOverlay hidden" id="helpModal">
+  <div class="modalSheet">
+    <div class="modalHeader">
+      <span data-i18n="howItWorksTitle">How it works</span>
+      <button type="button" class="modalClose" id="helpModalClose" aria-label="Close">✕</button>
+    </div>
+    <ol class="howItWorksList">
+      <li data-i18n="howItWorksStep1">Screenshot the "Training details" screen in the eGym app.</li>
+      <li data-i18n="howItWorksStep2">The app reads it on your device and builds a Garmin-ready FIT file — nothing is uploaded.</li>
+      <li data-i18n="howItWorksStep3">Import the FIT file into Garmin Connect; it syncs to Strava automatically if linked.</li>
+    </ol>
+    <a class="learnMore" href="https://github.com/Tuguntke/egym2garmin#readme" target="_blank" rel="noopener" data-i18n="learnMore">More info →</a>
+  </div>
 </div>
 
 <div class="card hidden" id="resultCard">
@@ -178,12 +232,6 @@
   </details>
 </div>
 
-<details style="margin-top:4px"><summary data-i18n="ocrTroubleSummary">Text recognition not working?</summary>
-  <span data-i18n="ocrTroubleText">Text recognition needs internet (the first time). If it doesn't work, add
-  rows manually with "+ add row" and fill in the date/time — the FIT file
-  works just as well.</span>
-</details>
-
 <div class="card hidden" id="shareCard" style="margin-top:14px">
   <div class="sectionTitle" data-i18n="shareTitle">Share this app</div>
   <div style="font-size:.85rem;color:var(--muted);margin-bottom:12px" data-i18n="shareCta">Know someone who trains with eGym? Share the app — scan the code or send the link.</div>
@@ -194,7 +242,7 @@
   </div>
 </div>
 
-<div class="card" id="feedbackCard">
+<div class="card hidden" id="feedbackCard">
   <div class="sectionTitle" data-i18n="feedbackTitle">Feedback</div>
   <div style="font-size:.85rem;color:var(--muted);margin-bottom:10px" data-i18n="feedbackIntro">How's it working for you? Ideas for new features are welcome too.</div>
   <div class="stars" id="stars">
@@ -608,7 +656,7 @@ function buildCardioFit(equipment, intervals, startUnixSec, tzOffsetSec) {
 
 
 /* ====== UI ====== */
-const APP_VERSION = '1.8.0'; // bij elke update ophogen + wijziging bijhouden in CHANGELOG.md (Drive)
+const APP_VERSION = '1.9.0'; // bij elke update ophogen + wijziging bijhouden in CHANGELOG.md (Drive)
 const $ = id => document.getElementById(id);
 const tbl = $('tbl');
 let expectedCount = null;
@@ -619,9 +667,12 @@ function openGarminImport() { try { window.open(GARMIN_IMPORT_URL, '_blank', 'no
 const I18N = {
   en: {
     tagline: 'Your eGym workouts, straight into Garmin.', learnMore: 'How it works →',
-    shareToggleShow: 'Share this app →', shareToggleHide: 'Hide sharing ↑',
     autoDownloadLabel: 'Auto-download when everything is recognized with confidence',
-    step1: 'Choose your eGym screenshots', pick: 'Choose screenshots',
+    dropText: 'Tap to upload eGym screenshots, or drag them here',
+    howItWorksTitle: 'How it works',
+    howItWorksStep1: 'Screenshot the "Training details" screen in the eGym app.',
+    howItWorksStep2: 'The app reads it on your device and builds a Garmin-ready FIT file — nothing is uploaded.',
+    howItWorksStep3: 'Import the FIT file into Garmin Connect; it syncs to Strava automatically if linked.',
     step2: 'Check the data', labelDate: 'Date', labelTime: 'Start time',
     thExercise: 'Exercise', thSets: 'Sets', thReps: 'Reps', thKg: 'kg', thKcal: 'kcal',
     addRow: '+ add row',
@@ -663,9 +714,12 @@ const I18N = {
   },
   de: {
     tagline: 'Deine eGym-Workouts, direkt in Garmin.', learnMore: 'So funktioniert\'s →',
-    shareToggleShow: 'App teilen →', shareToggleHide: 'Teilen ausblenden ↑',
     autoDownloadLabel: 'Automatisch herunterladen, wenn alles sicher erkannt wurde',
-    step1: 'Wähle deine eGym-Screenshots', pick: 'Screenshots auswählen',
+    dropText: 'Tippen, um eGym-Screenshots hochzuladen, oder hierher ziehen',
+    howItWorksTitle: 'So funktioniert\'s',
+    howItWorksStep1: 'Mache einen Screenshot vom Bildschirm „Trainingsdetails" in der eGym-App.',
+    howItWorksStep2: 'Die App liest ihn direkt auf deinem Gerät und erstellt eine Garmin-taugliche FIT-Datei — es wird nichts hochgeladen.',
+    howItWorksStep3: 'Importiere die FIT-Datei in Garmin Connect; sie synchronisiert automatisch mit Strava, falls verknüpft.',
     step2: 'Daten überprüfen', labelDate: 'Datum', labelTime: 'Startzeit',
     thExercise: 'Übung', thSets: 'Sätze', thReps: 'Wdh.', thKg: 'kg', thKcal: 'kcal',
     addRow: '+ Zeile hinzufügen',
@@ -707,9 +761,12 @@ const I18N = {
   },
   nl: {
     tagline: 'Jouw eGym-trainingen, direct in Garmin.', learnMore: 'Zo werkt het →',
-    shareToggleShow: 'App delen →', shareToggleHide: 'Delen verbergen ↑',
     autoDownloadLabel: 'Automatisch downloaden zodra alles met vertrouwen herkend is',
-    step1: 'Kies je eGym-screenshots', pick: 'Screenshots kiezen',
+    dropText: 'Tik om eGym-screenshots te uploaden of sleep ze hierheen',
+    howItWorksTitle: 'Zo werkt het',
+    howItWorksStep1: 'Maak een screenshot van het scherm \'Details van de training\' in de eGym-app.',
+    howItWorksStep2: 'De app leest \'m op je eigen toestel en maakt een Garmin-klaar FIT-bestand — er wordt niets geüpload.',
+    howItWorksStep3: 'Importeer het FIT-bestand in Garmin Connect; het synchroniseert automatisch met Strava als die gekoppeld is.',
     step2: 'Controleer de gegevens', labelDate: 'Datum', labelTime: 'Aanvangstijd',
     thExercise: 'Oefening', thSets: 'Sets', thReps: 'Herh.', thKg: 'kg', thKcal: 'kcal',
     addRow: '+ regel toevoegen',
@@ -766,7 +823,6 @@ function applyStaticI18n() {
 }
 
 function refreshDynamicI18n() {
-  $('shareToggle').textContent = t($('shareCard').classList.contains('hidden') ? 'shareToggleShow' : 'shareToggleHide');
   document.querySelectorAll('#tbl .gsel option[value=""]').forEach(o => o.textContent = t('chooseExercise'));
   document.querySelectorAll('#tbl .nm').forEach(i => i.placeholder = t('exercisePlaceholder'));
   document.querySelectorAll('#tbl .tapToEditHint').forEach(el => el.textContent = t('tapToEdit'));
@@ -794,17 +850,30 @@ $('langSel').addEventListener('change', () => {
   applyStaticI18n();
   refreshDynamicI18n();
 });
-$('shareToggle').addEventListener('click', ev => {
-  ev.preventDefault();
-  const card = $('shareCard');
-  const nowHidden = !card.classList.contains('hidden');
-  card.classList.toggle('hidden', nowHidden);
-  $('shareToggle').textContent = t(nowHidden ? 'shareToggleShow' : 'shareToggleHide');
-  if (!nowHidden) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// ---------- help modal ----------
+function openHelpModal() { $('helpModal').classList.remove('hidden'); }
+function closeHelpModal() { $('helpModal').classList.add('hidden'); }
+$('helpBtn').addEventListener('click', openHelpModal);
+$('helpModalClose').addEventListener('click', closeHelpModal);
+$('helpModal').addEventListener('click', ev => { if (ev.target === $('helpModal')) closeHelpModal(); });
+document.addEventListener('keydown', ev => {
+  if (ev.key === 'Escape' && !$('helpModal').classList.contains('hidden')) closeHelpModal();
 });
 
-$('pick').addEventListener('click', () => $('files').click());
 $('files').addEventListener('change', e => { if (e.target.files.length) runOcr([...e.target.files]); });
+
+// ---------- dropzone (click via <label for="files">, plus drag & drop) ----------
+const dropzone = $('dropzone');
+['dragenter', 'dragover'].forEach(evt => dropzone.addEventListener(evt, e => {
+  e.preventDefault(); e.stopPropagation(); dropzone.classList.add('dragover');
+}));
+['dragleave', 'drop'].forEach(evt => dropzone.addEventListener(evt, e => {
+  e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('dragover');
+}));
+dropzone.addEventListener('drop', e => {
+  const files = [...(e.dataTransfer?.files || [])].filter(f => f.type.startsWith('image/'));
+  if (files.length) runOcr(files);
+});
 
 function setStatus(msg, ok) { $('status').textContent = msg; $('status').className = ok ? 'ok' : ''; }
 
@@ -838,6 +907,7 @@ async function upscale(file) {
 }
 
 async function runOcr(fileList) {
+  $('ocrTrouble').classList.add('hidden');
   try {
     setStatus(t('loadingOcr'));
     await loadTesseract();
@@ -859,13 +929,24 @@ async function runOcr(fileList) {
     if (parsed.exercises.length) bits.push(t('bitsExercises', { n: parsed.exercises.length }));
     if (nCardio) bits.push(t('bitsCardio', { n: nCardio }));
     setStatus(bits.length ? t('recognized', { bits: bits.join(', ') }) : t('nothingRecognized'), bits.length > 0);
+    if (!bits.length) $('ocrTrouble').classList.remove('hidden');
   } catch (err) {
     setStatus(t('ocrFailed', { msg: err.message }));
+    $('ocrTrouble').classList.remove('hidden');
     showResult({ exercises: [], dateInfo: null, expectedCount: null }, { crosstrainer: [], loopband: [], fiets: [] });
   }
 }
 
+function showPostSuccess() {
+  $('garminCard').classList.remove('hidden');
+  $('shareCard').classList.remove('hidden');
+  $('feedbackCard').classList.remove('hidden');
+}
+
 function showResult(parsed, cardioDevices) {
+  $('garminCard').classList.add('hidden');
+  $('shareCard').classList.add('hidden');
+  $('feedbackCard').classList.add('hidden');
   expectedCount = parsed.expectedCount;
   [...tbl.querySelectorAll('tbody.exrow')].forEach(tb => tb.remove());
   for (const e of parsed.exercises) addRow(e, { confident: true });
@@ -986,7 +1067,7 @@ function addCardioDeviceBlock(deviceKey, label, intervals) {
       a.download = fname;
       document.body.appendChild(a); a.click(); a.remove();
       summary.innerHTML = `<span class="ok">✓</span> ` + t('cardioSummary', { fname, min: Math.round(totalS/60), km: totalKm.toFixed(2) });
-      $('garminCard').classList.remove('hidden');
+      showPostSuccess();
       return true;
     } catch (err) { summary.textContent = err.message; return false; }
   };
@@ -1086,7 +1167,7 @@ function buildAndDownloadStrength() {
     $('summary').innerHTML = `<span class="ok">✓</span> ` +
       t('strengthSummary', { fname, n: ex.length, sets: nSets, min: Math.round(totalS/60), kcal: totalKcal }) +
       (zonder ? `<br><span class="warnline">${t('noGarminChoice', { n: zonder })}</span>` : '');
-    $('garminCard').classList.remove('hidden');
+    showPostSuccess();
     return true;
   } catch (err) { $('summary').textContent = err.message; return false; }
 }

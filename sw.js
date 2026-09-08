@@ -1,7 +1,7 @@
 // eGym → Garmin — service worker
 // Cachet de app-shell zodat de app ook zonder (goede) verbinding opent.
 // Ophogen bij elke release zodat oude caches automatisch worden opgeruimd.
-const CACHE = 'egym2garmin-v1.8.0';
+const CACHE = 'egym2garmin-v1.9.0';
 const SHELL = [
   './',
   'index.html',
