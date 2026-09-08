@@ -94,6 +94,11 @@
   .stars span.filled { color:var(--accent2); }
   textarea#feedbackText { width:100%; border:1px solid var(--line); border-radius:8px; padding:10px;
     background:var(--card2); color:var(--ink); font:inherit; resize:vertical; }
+  .exrow.confirmed .r2.full { display:none; }
+  .exrow .r2.compact { display:none; }
+  .exrow.confirmed .r2.compact { display:table-row; }
+  .confirmChip { color:var(--accent2); font-weight:700; font-size:.85rem; cursor:pointer; }
+  .confirmChip .tapToEditHint { color:var(--muted); font-weight:400; font-size:.72rem; margin-left:6px; }
 </style>
 </head>
 <body>
@@ -102,6 +107,7 @@
     <h1>eGym → Garmin</h1>
     <div class="tagline" data-i18n="tagline">Your eGym workouts, straight into Garmin.</div>
     <a class="learnMore" href="https://github.com/Tuguntke/egym2garmin#readme" target="_blank" rel="noopener" data-i18n="learnMore">How it works →</a>
+    <a class="learnMore" id="shareToggle" href="#" style="display:block;margin-top:2px" data-i18n="shareToggleShow">Share this app →</a>
   </div>
   <div class="topRight">
     <select id="langSel" class="langSel">
@@ -139,6 +145,10 @@
       <label><span data-i18n="activeLabel">Seconds per set</span><br><input type="number" id="activeS" value="60"></label>
       <label><span data-i18n="restLabel">Rest between sets (s)</span><br><input type="number" id="restS" value="50"></label>
     </div>
+    <label style="display:block;margin-top:10px;font-size:.85rem">
+      <input type="checkbox" id="autoDownload" style="width:auto;vertical-align:middle;margin-right:6px">
+      <span data-i18n="autoDownloadLabel">Auto-download when everything is recognized with confidence</span>
+    </label>
   </details>
 </div>
 
@@ -153,11 +163,13 @@
   <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px">
     <span data-i18n="cardioNote">Uses the same date/start time as above. Each machine becomes its own FIT file.</span>
   </div>
+  <button class="secondary hidden" id="downloadAllCardio" style="margin-bottom:10px" data-i18n="downloadAllCardio">Download all cardio FIT files</button>
   <div id="cardioDevices"></div>
 </div>
 
 <div class="card hidden" id="garminCard">
   <div class="step"><span class="n">4</span> <span data-i18n="step4">Import</span></div>
+  <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px" data-i18n="garminAutoNote">This usually opens automatically after downloading. Didn't see a new tab? Use the button below.</div>
   <a class="btn" href="https://connect.garmin.com/modern/import-data" target="_blank" rel="noopener" data-i18n="garminLink">Open Garmin Connect Import</a>
   <details><summary data-i18n="howFurther">What's next?</summary>
     <span data-i18n="howFurtherText">On the Garmin page choose "Import Data", select the .fit file you just
@@ -172,7 +184,7 @@
   works just as well.</span>
 </details>
 
-<div class="card" id="shareCard" style="margin-top:14px">
+<div class="card hidden" id="shareCard" style="margin-top:14px">
   <div class="sectionTitle" data-i18n="shareTitle">Share this app</div>
   <div style="font-size:.85rem;color:var(--muted);margin-bottom:12px" data-i18n="shareCta">Know someone who trains with eGym? Share the app — scan the code or send the link.</div>
   <div class="qrWrap"><img src="data:image/png;base64,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" alt="QR code"></div>
@@ -596,25 +608,32 @@ function buildCardioFit(equipment, intervals, startUnixSec, tzOffsetSec) {
 
 
 /* ====== UI ====== */
-const APP_VERSION = '1.6.0'; // bij elke update ophogen + wijziging bijhouden in CHANGELOG.md (Drive)
+const APP_VERSION = '1.8.0'; // bij elke update ophogen + wijziging bijhouden in CHANGELOG.md (Drive)
 const $ = id => document.getElementById(id);
 const tbl = $('tbl');
 let expectedCount = null;
+const GARMIN_IMPORT_URL = 'https://connect.garmin.com/modern/import-data';
+function openGarminImport() { try { window.open(GARMIN_IMPORT_URL, '_blank', 'noopener'); } catch (e) {} }
 
 // ---------- i18n (EN default, DE, NL) ----------
 const I18N = {
   en: {
     tagline: 'Your eGym workouts, straight into Garmin.', learnMore: 'How it works →',
+    shareToggleShow: 'Share this app →', shareToggleHide: 'Hide sharing ↑',
+    autoDownloadLabel: 'Auto-download when everything is recognized with confidence',
     step1: 'Choose your eGym screenshots', pick: 'Choose screenshots',
     step2: 'Check the data', labelDate: 'Date', labelTime: 'Start time',
     thExercise: 'Exercise', thSets: 'Sets', thReps: 'Reps', thKg: 'kg', thKcal: 'kcal',
     addRow: '+ add row',
-    garminNote: 'Below each exercise is the Garmin exercise that will be used. Not right? Choose a different one.',
+    garminNote: 'Confident matches are shown compact — tap one to change it. Anything uncertain stays open for you to pick.',
+    tapToEdit: '(tap to change)',
     settings: 'Settings', activeLabel: 'Seconds per set', restLabel: 'Rest between sets (s)',
     step3fit: 'FIT file (strength training)', makeFit: 'Create & download FIT file',
     step3cardio: 'Cardio machines',
     cardioNote: 'Uses the same date/start time as above. Each machine becomes its own FIT file.',
+    downloadAllCardio: 'Download all cardio FIT files',
     step4: 'Import', garminLink: 'Open Garmin Connect Import',
+    garminAutoNote: "This usually opens automatically after downloading. Didn't see a new tab? Use the button below.",
     howFurther: "What's next?",
     howFurtherText: 'On the Garmin page choose "Import Data", select the .fit file you just downloaded (in your Downloads folder) and confirm. If your Garmin-Strava link is active, the activity will appear in Strava automatically.',
     ocrTroubleSummary: 'Text recognition not working?',
@@ -644,16 +663,21 @@ const I18N = {
   },
   de: {
     tagline: 'Deine eGym-Workouts, direkt in Garmin.', learnMore: 'So funktioniert\'s →',
+    shareToggleShow: 'App teilen →', shareToggleHide: 'Teilen ausblenden ↑',
+    autoDownloadLabel: 'Automatisch herunterladen, wenn alles sicher erkannt wurde',
     step1: 'Wähle deine eGym-Screenshots', pick: 'Screenshots auswählen',
     step2: 'Daten überprüfen', labelDate: 'Datum', labelTime: 'Startzeit',
     thExercise: 'Übung', thSets: 'Sätze', thReps: 'Wdh.', thKg: 'kg', thKcal: 'kcal',
     addRow: '+ Zeile hinzufügen',
-    garminNote: 'Unter jeder Übung steht die verwendete Garmin-Übung. Stimmt sie nicht? Wähle selbst eine andere.',
+    garminNote: 'Sichere Zuordnungen werden kompakt angezeigt — antippen, um sie zu ändern. Unsichere bleiben offen zur Auswahl.',
+    tapToEdit: '(zum Ändern tippen)',
     settings: 'Einstellungen', activeLabel: 'Sekunden pro Satz', restLabel: 'Pause zwischen Sätzen (s)',
     step3fit: 'FIT-Datei (Krafttraining)', makeFit: 'FIT-Datei erstellen & herunterladen',
     step3cardio: 'Cardio-Geräte',
     cardioNote: 'Verwendet Datum/Startzeit von oben. Jedes Gerät wird eine eigene FIT-Datei.',
+    downloadAllCardio: 'Alle Cardio-FIT-Dateien herunterladen',
     step4: 'Importieren', garminLink: 'Garmin Connect Import öffnen',
+    garminAutoNote: 'Das öffnet sich normalerweise automatisch nach dem Herunterladen. Kein neuer Tab erschienen? Nutze den Button unten.',
     howFurther: 'Wie geht’s weiter?',
     howFurtherText: 'Wähle auf der Garmin-Seite „Daten importieren", wähle die gerade heruntergeladene .fit-Datei (im Downloads-Ordner) und bestätige. Ist deine Garmin-Strava-Verknüpfung aktiv, erscheint die Aktivität danach automatisch in Strava.',
     ocrTroubleSummary: 'Texterkennung funktioniert nicht?',
@@ -683,16 +707,21 @@ const I18N = {
   },
   nl: {
     tagline: 'Jouw eGym-trainingen, direct in Garmin.', learnMore: 'Zo werkt het →',
+    shareToggleShow: 'App delen →', shareToggleHide: 'Delen verbergen ↑',
+    autoDownloadLabel: 'Automatisch downloaden zodra alles met vertrouwen herkend is',
     step1: 'Kies je eGym-screenshots', pick: 'Screenshots kiezen',
     step2: 'Controleer de gegevens', labelDate: 'Datum', labelTime: 'Aanvangstijd',
     thExercise: 'Oefening', thSets: 'Sets', thReps: 'Herh.', thKg: 'kg', thKcal: 'kcal',
     addRow: '+ regel toevoegen',
-    garminNote: 'Onder elke oefening staat de Garmin-oefening die wordt gebruikt. Klopt hij niet? Kies zelf een andere.',
+    garminNote: 'Zekere koppelingen worden compact getoond — tik erop om te wijzigen. Onzekere blijven open staan om te kiezen.',
+    tapToEdit: '(tik om te wijzigen)',
     settings: 'Instellingen', activeLabel: 'Seconden per set', restLabel: 'Rust tussen sets (s)',
     step3fit: 'FIT-bestand (krachttraining)', makeFit: 'Maak & download FIT-bestand',
     step3cardio: 'Cardio-apparaten',
     cardioNote: 'Gebruikt dezelfde datum/aanvangstijd hierboven. Elk apparaat wordt een eigen FIT-bestand.',
+    downloadAllCardio: 'Download alle cardio FIT-bestanden',
     step4: 'Importeren', garminLink: 'Open Garmin Connect Import',
+    garminAutoNote: 'Dit opent normaal gesproken automatisch na het downloaden. Geen nieuw tabblad gezien? Gebruik de knop hieronder.',
     howFurther: 'Hoe verder?',
     howFurtherText: 'Kies op de Garmin-pagina "Gegevens importeren", selecteer het zojuist gedownloade .fit-bestand (staat in je Downloads-map) en bevestig. Als je Garmin-Strava-koppeling aanstaat, verschijnt de training daarna automatisch in Strava.',
     ocrTroubleSummary: 'Werkt de tekstherkenning niet?',
@@ -737,8 +766,10 @@ function applyStaticI18n() {
 }
 
 function refreshDynamicI18n() {
+  $('shareToggle').textContent = t($('shareCard').classList.contains('hidden') ? 'shareToggleShow' : 'shareToggleHide');
   document.querySelectorAll('#tbl .gsel option[value=""]').forEach(o => o.textContent = t('chooseExercise'));
   document.querySelectorAll('#tbl .nm').forEach(i => i.placeholder = t('exercisePlaceholder'));
+  document.querySelectorAll('#tbl .tapToEditHint').forEach(el => el.textContent = t('tapToEdit'));
   document.querySelectorAll('.cardioDevice').forEach(box => {
     const key = box.dataset.device;
     box.querySelector('h3').textContent = t('device_' + key);
@@ -752,6 +783,10 @@ function refreshDynamicI18n() {
 
 $('verTag').textContent = 'v' + APP_VERSION;
 $('langSel').value = lang;
+try { $('autoDownload').checked = localStorage.getItem('egym_autodownload') === '1'; } catch (e) {}
+$('autoDownload').addEventListener('change', () => {
+  try { localStorage.setItem('egym_autodownload', $('autoDownload').checked ? '1' : '0'); } catch (e) {}
+});
 applyStaticI18n();
 $('langSel').addEventListener('change', () => {
   lang = $('langSel').value;
@@ -759,6 +794,15 @@ $('langSel').addEventListener('change', () => {
   applyStaticI18n();
   refreshDynamicI18n();
 });
+$('shareToggle').addEventListener('click', ev => {
+  ev.preventDefault();
+  const card = $('shareCard');
+  const nowHidden = !card.classList.contains('hidden');
+  card.classList.toggle('hidden', nowHidden);
+  $('shareToggle').textContent = t(nowHidden ? 'shareToggleShow' : 'shareToggleHide');
+  if (!nowHidden) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
 $('pick').addEventListener('click', () => $('files').click());
 $('files').addEventListener('change', e => { if (e.target.files.length) runOcr([...e.target.files]); });
 
@@ -824,7 +868,7 @@ async function runOcr(fileList) {
 function showResult(parsed, cardioDevices) {
   expectedCount = parsed.expectedCount;
   [...tbl.querySelectorAll('tbody.exrow')].forEach(tb => tb.remove());
-  for (const e of parsed.exercises) addRow(e);
+  for (const e of parsed.exercises) addRow(e, { confident: true });
   const now = new Date();
   let d = now;
   if (parsed.dateInfo) {
@@ -838,6 +882,30 @@ function showResult(parsed, cardioDevices) {
   $('fitCard').classList.toggle('hidden', parsed.exercises.length === 0);
   checkCount();
   showCardioResult(cardioDevices || { crosstrainer: [], loopband: [], fiets: [] });
+  maybeAutoDownload();
+}
+
+function allConfidentAndReady() {
+  const rows = [...tbl.querySelectorAll('tbody.exrow')];
+  if (!rows.length) return false;
+  if (!rows.every(tb => tb.classList.contains('confirmed'))) return false;
+  if (expectedCount !== null && rows.length !== expectedCount) return false;
+  if (!$('dat').value || !$('tijd').value) return false;
+  return true;
+}
+
+function maybeAutoDownload() {
+  if (!$('autoDownload').checked) return;
+  let any = false;
+  if (!$('fitCard').classList.contains('hidden') && allConfidentAndReady()) {
+    if (buildAndDownloadStrength()) any = true;
+  }
+  if (!$('cardioCard').classList.contains('hidden') && $('dat').value && $('tijd').value) {
+    for (const box of document.querySelectorAll('.cardioDevice')) {
+      if (box.buildAndDownload && box.buildAndDownload()) any = true;
+    }
+  }
+  if (any) openGarminImport();
 }
 
 function showCardioResult(cardioDevices) {
@@ -845,12 +913,21 @@ function showCardioResult(cardioDevices) {
   container.innerHTML = '';
   const anyDevice = CARDIO_DEVICES.some(d => (cardioDevices[d.key] || []).length);
   $('cardioCard').classList.toggle('hidden', !anyDevice);
+  let activeCount = 0;
   for (const d of CARDIO_DEVICES) {
     const intervals = cardioDevices[d.key] || [];
     if (!intervals.length) continue;
     addCardioDeviceBlock(d.key, d.label, intervals);
+    activeCount++;
   }
+  $('downloadAllCardio').classList.toggle('hidden', activeCount <= 1);
 }
+$('downloadAllCardio').addEventListener('click', () => {
+  const boxes = [...document.querySelectorAll('.cardioDevice')];
+  let any = false;
+  for (const box of boxes) { if (box.buildAndDownload && box.buildAndDownload()) any = true; }
+  if (any) openGarminImport();
+});
 
 function addCardioDeviceBlock(deviceKey, label, intervals) {
   const box = document.createElement('div');
@@ -886,7 +963,7 @@ function addCardioDeviceBlock(deviceKey, label, intervals) {
   };
   for (const iv of intervals) addRowTo(iv);
   box.querySelector('.addCiv').addEventListener('click', () => addRowTo());
-  box.querySelector('.makeCardioFit').addEventListener('click', () => {
+  box.buildAndDownload = () => {
     const summary = box.querySelector('.cardioSummary');
     try {
       const ivs = [...tbody.querySelectorAll('tr')].map(tr => {
@@ -910,7 +987,11 @@ function addCardioDeviceBlock(deviceKey, label, intervals) {
       document.body.appendChild(a); a.click(); a.remove();
       summary.innerHTML = `<span class="ok">✓</span> ` + t('cardioSummary', { fname, min: Math.round(totalS/60), km: totalKm.toFixed(2) });
       $('garminCard').classList.remove('hidden');
-    } catch (err) { summary.textContent = err.message; }
+      return true;
+    } catch (err) { summary.textContent = err.message; return false; }
+  };
+  box.querySelector('.makeCardioFit').addEventListener('click', () => {
+    if (box.buildAndDownload()) openGarminImport();
   });
   $('cardioDevices').appendChild(box);
 }
@@ -923,10 +1004,13 @@ function optionsHtml(selected) {
   return h;
 }
 
-function addRow(e = {}) {
+function addRow(e = {}, opts = {}) {
   const idx = e.name ? matchExercise(e.name) : null;
+  const confident = !!opts.confident && idx !== null &&
+    e.sets != null && e.reps != null && e.kg !== null && e.kg !== undefined && e.kg !== '';
   const tb = document.createElement('tbody');
-  tb.className = 'exrow';
+  tb.className = 'exrow' + (confident ? ' confirmed' : '');
+  const chipLabel = idx !== null ? GARMIN_EXERCISES[idx].label : '';
   tb.innerHTML =
     `<tr class="r1">
        <td><input class="nm" value="${(e.name || '').replace(/"/g,'&quot;')}" placeholder="${t('exercisePlaceholder')}"></td>
@@ -936,8 +1020,9 @@ function addRow(e = {}) {
        <td class="num"><input inputmode="numeric" value="${e.kcal ?? ''}"></td>
        <td class="del">✕</td>
      </tr>
-     <tr class="r2"><td colspan="6"><span class="garmlabel">Garmin</span>
-       <select class="gsel">${optionsHtml(idx)}</select></td></tr>`;
+     <tr class="r2 full"><td colspan="6"><span class="garmlabel">Garmin</span>
+       <select class="gsel">${optionsHtml(idx)}</select></td></tr>
+     <tr class="r2 compact"><td colspan="6"><span class="confirmChip">✓ ${chipLabel}<span class="tapToEditHint">${t('tapToEdit')}</span></span></td></tr>`;
   tb.querySelector('.del').addEventListener('click', () => { tb.remove(); checkCount(); });
   const sel = tb.querySelector('.gsel');
   const paint = () => sel.classList.toggle('unset', sel.value === '');
@@ -949,7 +1034,8 @@ function addRow(e = {}) {
     sel.value = i === null ? '' : String(i);
     paint();
   });
-  sel.addEventListener('change', () => { sel.dataset.touched = '1'; });
+  sel.addEventListener('change', () => { sel.dataset.touched = '1'; tb.classList.remove('confirmed'); });
+  tb.querySelector('.confirmChip').addEventListener('click', () => tb.classList.remove('confirmed'));
   tbl.appendChild(tb);
 }
 $('addRow').addEventListener('click', () => addRow());
@@ -980,7 +1066,7 @@ function readRows() {
   return out;
 }
 
-$('makeFit').addEventListener('click', () => {
+function buildAndDownloadStrength() {
   try {
     const ex = readRows();
     const [y, mo, da] = $('dat').value.split('-').map(Number);
@@ -1001,7 +1087,11 @@ $('makeFit').addEventListener('click', () => {
       t('strengthSummary', { fname, n: ex.length, sets: nSets, min: Math.round(totalS/60), kcal: totalKcal }) +
       (zonder ? `<br><span class="warnline">${t('noGarminChoice', { n: zonder })}</span>` : '');
     $('garminCard').classList.remove('hidden');
-  } catch (err) { $('summary').textContent = err.message; }
+    return true;
+  } catch (err) { $('summary').textContent = err.message; return false; }
+}
+$('makeFit').addEventListener('click', () => {
+  if (buildAndDownloadStrength()) openGarminImport();
 });
 
 // ---------- share (copy link) ----------

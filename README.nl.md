@@ -20,9 +20,11 @@ Het geheel draait als één statische HTML-pagina. Er is geen backend, geen inlo
 - **Krachttraining**: herkent oefeningnaam, sets, herhalingen, gewicht (kg) en calorieën uit eGym-screenshots, en koppelt elke oefening aan de bijpassende officiële Garmin-oefeningcategorie (zodat hij bij naam in Garmin/Strava verschijnt in plaats van "Onbekend").
 - **Cardio-apparaten**: loopband, fiets en crosstrainer worden apart herkend, elk met een eigen `.fit`-bestand inclusief duur en afstand per interval.
 - **Bewerkbaar vóór export**: elke herkende waarde (en datum/tijd) kan handmatig worden gecorrigeerd voordat het FIT-bestand wordt gemaakt, en regels kunnen ook handmatig worden toegevoegd als een screenshot niet herkend werd of OCR niet beschikbaar is.
+- **Minder handelingen**: oefeningen die de app met vertrouwen herkent, worden compact getoond met een vinkje in plaats van een volledige invulrij — tik erop om 'm alsnog open te klappen. Een FIT-bestand downloaden opent ook automatisch de Garmin Connect-importpagina, en bij meerdere cardio-apparaten staat er één "Download alle cardio FIT-bestanden"-knop in plaats van eentje per apparaat.
+- **Optioneel automatisch downloaden**: zet "Automatisch downloaden zodra alles met vertrouwen herkend is" aan onder Instellingen, en de app downloadt de FIT-bestanden — inclusief het openen van de Garmin Connect-import — vanzelf zodra elke regel zeker is en datum/tijd zijn ingevuld. Staat standaard uit; bij onzekere regels moet je nog steeds eerst zelf controleren.
 - **Installeerbare PWA**: werkt na eerste gebruik volledig offline (zet 'm op je beginscherm op Android of iPhone) en toont een klein versienummer zodat je altijd weet welke build actief is.
 - **Meertalig**: Engels (standaard), Duits en Nederlands, op elk moment te wisselen rechtsboven — ook nadat screenshots al verwerkt zijn. De keuze wordt onthouden op het toestel.
-- **Delen**: een "Deel deze app"-kaart toont een QR-code en een kopieerbare link naar de live app, zodat je 'm in een paar seconden aan een andere eGym-gebruiker kunt doorgeven.
+- **Delen**: tik bovenaan op "App delen →" om een QR-code en een kopieerbare link naar de live app tevoorschijn te halen, zodat je 'm in een paar seconden aan een andere eGym-gebruiker kunt doorgeven.
 - **Ingebouwde feedback**: een sterrenbeoordeling en een opmerkingenveld laten testers feedback of featuretips rechtstreeks per e-mail naar de beheerder sturen — zonder apart formulier of account. Een knop "App-info kopiëren" voegt versie-/browserdetails toe voor bugmeldingen.
 
 ## Installeren op je telefoon
@@ -39,14 +41,14 @@ Eenmaal geïnstalleerd opent hij volledig scherm zoals een gewone app en blijft 
 
 1. Open in de eGym-app je afgeronde training en maak screenshots van de oefeningenlijst (scroll en maak meerdere screenshots indien nodig — overlap is geen probleem, duplicaten worden automatisch verwijderd). Zorg dat de kop met "X Oefeningen" en de datum/tijd op minstens één screenshot te zien zijn.
 2. Open de eGym → Garmin app en tik op **Screenshots kiezen**, en selecteer alle screenshots van die sessie.
-3. Controleer de herkende tabel. Datum en aanvangstijd zijn uit de screenshot gelezen, maar aanpasbaar. Elke regel toont ook de Garmin-oefening waaraan hij gekoppeld wordt — klopt die niet, kies dan een andere in het keuzemenu.
-4. Tik op **Maak & download FIT-bestand** (eenmaal voor krachttraining, en apart per cardio-apparaat indien van toepassing).
-5. Tik op **Open Garmin Connect Import**, kies "Gegevens importeren" en selecteer het zojuist gedownloade `.fit`-bestand.
+3. Controleer de herkende tabel. Datum en aanvangstijd zijn uit de screenshot gelezen, maar aanpasbaar. Regels waar de app zeker van is worden compact getoond met een vinkje — tik erop als de gekoppelde Garmin-oefening niet klopt. Onzekere regels blijven open staan met een keuzemenu.
+4. Tik op **Maak & download FIT-bestand** (eenmaal voor krachttraining; bij cardio gebruik je **Download alle cardio FIT-bestanden** als er meerdere apparaten gevonden zijn, anders de knop per apparaat). De Garmin Connect-importpagina opent hierbij automatisch in een nieuw tabblad. Staat automatisch downloaden aan bij Instellingen, dan gebeurt deze stap vanzelf zodra alles er zeker uitziet.
+5. Kies daar "Gegevens importeren" en selecteer het zojuist gedownloade `.fit`-bestand. Geen nieuw tabblad gezien? Gebruik de knop **Open Garmin Connect Import**.
 6. Klaar — zijn Garmin en Strava gekoppeld, dan synchroniseert de activiteit automatisch met Strava.
 
 ## Delen met anderen
 
-Scroll in de app helemaal naar beneden naar de kaart **Deel deze app**: die toont een QR-code die naar de live app-link wijst, plus de link zelf met een "Link kopiëren"-knop. Laat de QR-code zien aan een andere eGym-gebruiker, of stuur de link rechtstreeks door.
+Tik bovenaan de app op **App delen →** om een QR-code tevoorschijn te halen die naar de live app-link wijst, plus de link zelf met een "Link kopiëren"-knop. Laat de QR-code zien aan een andere eGym-gebruiker, of stuur de link rechtstreeks door.
 
 ## Feedback
 
